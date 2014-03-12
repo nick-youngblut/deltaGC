@@ -3,6 +3,12 @@ use strict;
 use warnings;
 use Module::Build;
 
+# loading bin scripts #
+opendir IN, "./bin/" or die $!;
+my @binfiles = readdir IN;
+my @binscripts = grep(/.pl$|.py$|.r$/i, @binfiles);
+@binscripts = map{$_ = "./bin/" . $_} @binscripts;
+
 my $builder = Module::Build->new(
     module_name         => 'deltaMass',
     license             => 'perl',
@@ -16,6 +22,7 @@ my $builder = Module::Build->new(
     },
     add_to_cleanup      => [ 'deltaMass-*' ],
     create_makefile_pl => 'traditional',
+    script_files => \@binscripts			   
 );
 
 $builder->create_build_script();

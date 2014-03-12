@@ -1,0 +1,22 @@
+---
+abstract: 'The great new deltaMass!'
+author:
+  - 'Nick Youngblut <ndy2@cornell.edu>'
+build_requires:
+  Test::More: 0
+dynamic_config: 0
+generated_by: 'Module::Build version 0.4204, CPAN::Meta::Converter version 2.120351'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: deltaMass
+provides:
+  deltaMass:
+    file: lib/deltaMass.pm
+    version: 0.01
+requires:
+  perl: 5.006
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.01
