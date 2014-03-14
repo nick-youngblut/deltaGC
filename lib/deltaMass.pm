@@ -181,6 +181,110 @@ creating fragments for each read & calculating GC on each
 push @EXPORT_OK, 'get_frag_GC';
 
 sub get_frag_GC{
+  my $genome = $_;
+  my ($self) = @_;
+
+  my $reads_r = $self->user_args->{reads_r};
+  my $genome_seqs_r = $self->user_args->{genome_seqs_r};
+  my $ARGV = $self->user_args->{argv};
+
+  #print Dumper $argv; exit;
+
+  # inializing args
+  my ($size_dist, $frag_min, $frag_max, $mean, $stdev, $primer_buffer) =
+     ($ARGV{-sd},
+      $ARGV{-range}{min_length},
+      $ARGV{-range}{max_length},
+      $ARGV{-mean},
+      $ARGV{-stdev},
+      $ARGV{-primer_buffer},
+      $ARGV{-c});
+  
+  # sanity checks
+  ## values provided
+  map{ confess "ERROR: argument missing: $!\n" unless defined $_ } 
+    ($size_dist, $frag_min, $frag_max, $mean, $stdev, $primer_buffer);
+
+  # interating through fragments
+  my %res;
+  #foreach my $genome (keys %$reads_r){
+    die "ERROR: cannot find '$genome' in genomes fasta\n"
+      unless exists $genome_seqs_r->{$genome};
+
+    foreach my $Uid (keys %{$reads_r->{$genome}}){
+      my $amp_start = $reads_r->{$genome}{$Uid}{amp_start};
+      my $amp_end = $reads_r->{$genome}{$Uid}{amp_end};
+      my $amp_len = $reads_r->{$genome}{$Uid}{amp_len};
+
+      # fragment size
+      my $frag_size;
+      if($size_dist eq 'uniform'){
+	while(1){
+	  $frag_size = random_uniform_integer(1, $frag_min, $frag_max);
+	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+	}
+      }
+      elsif($size_dist eq 'normal'){
+	while(1){
+	  $frag_size = int random_normal(1, $mean, $stdev);
+	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+	}
+      }
+      elsif($size_dist eq 'exponential'){
+	while(1){
+	  $frag_size = int random_exponential(1, $mean);
+	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+	}
+      }
+      else{ confess "ERROR: do not recognize size distribution\n"; }
+            
+      # determine fragment start-end based on amplicon start-end
+      ## amplicon center postion
+      my $amp_center = int($amp_start + abs($amp_len * 0.5));
+      ## fragment_start = amp_center - (frag_size * x); x = random draw from unifrom distribution 0:1
+      my $x = random_uniform();
+      ### start_floor = (primer_buffer + 0.5*amp_len) / frag_size
+      my $floor  = ($primer_buffer + 0.5 * $amp_len) / $frag_size; 
+      $x = $floor if $x < $floor;
+      my $ceiling = 1 - $floor;                               # ceiling = 1 - floor
+      $x = $ceiling if $x > $ceiling;
+      my $frag_start = int( $amp_center - ($frag_size * $x) );
+
+      ### sanity check 
+      carp "WARNING: frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
+	if $frag_start - ($amp_end + $primer_buffer) > $frag_size;
+
+      # getting fragment
+      ## wrapping around genome sequence string if neede
+      my $frag_seq;
+      if($frag_start + $frag_size + 1 > $genome_seqs_r->{$genome}{len}){ # wrap
+	my $max_len = $genome_seqs_r->{$genome}{len} - $frag_start + 1;
+	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $max_len);
+	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, 0, $frag_size - $max_len);
+      }
+      else{
+	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $frag_size );
+      }
+      
+      # storing amp_start & fragment_start
+      $res{$Uid}{frag_start} = $frag_start;
+
+      # getting fragment GC & length
+      ($res{$Uid}{frag_GC}, $res{$Uid}{frag_len}) =
+	calc_GC( $frag_seq );
+
+      # copying all other values from reads
+      map{ $res{$Uid}{$_} = $reads_r->{$genome}{$Uid}{$_} } 
+	keys %{$reads_r->{$genome}{$Uid}};
+
+    }
+
+  # gathering
+  MCE->gather( $genome, \%res );
+  
+}
+
+sub get_frag_GC_old{
 # foreach read:
 ## determine random fragment size
 ## pull fragment from genome

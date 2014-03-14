@@ -90,9 +90,20 @@ Fragment must contain this many bp before & after the 'amplicon' (specified by g
 
 Default: primer_buffer.default
 
-=for Euclid
+=for Euclid:
 primer_buffer.type: int >=0
 primer_buffer.default: 70
+
+
+=item -c[ore] <n_cores>
+
+Number of cores to use.
+
+Default n_cores.default
+
+=for Euclid:
+n_cores.type: int > 0
+n_cores.default: 1
 
 =item --debug [<log_level>]
 
@@ -144,7 +155,7 @@ use Data::Dumper;
 use Getopt::Euclid;
 use FindBin qw/$Bin/;
 use lib "$Bin";
-
+use MCE;
 use deltaMass qw/
 load_genome_fasta
 load_reads
@@ -170,20 +181,23 @@ my $reads_r = load_reads($ARGV{-reads});
 
 # creating fragments for each read & calculating GC
 print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
-get_frag_GC($genome_seqs_r, $reads_r, 
-	    $ARGV{-sd}, 
-	    $ARGV{-range}{min_length},
-	    $ARGV{-range}{max_length},
-	    $ARGV{-mean},
-	    $ARGV{-stdev},
-	    $ARGV{-primer_buffer});
+my $mce = MCE->new(
+		   chunk_size => 1,
+		   max_workers => $ARGV{-c},
+		   user_func => \&get_frag_GC,
+		   user_args => {'reads_r' => $reads_r,
+				 'genome_seqs_r' => $genome_seqs_r,
+				 'argv' => \%ARGV}
+		   );
+my %gathered; 
+MCE->process( [keys %$reads_r], { gather => \%gathered });
 
 # writing all read info to file if debug
-write_read_info($reads_r, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
+write_read_info(\%gathered, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
 
 # calculate variance & CI
 print STDERR "Calculating delta-GC statistics...\n" unless $ARGV{-quiet};
-my $stats_r = get_GC_stats($reads_r);
+my $stats_r = get_GC_stats(\%gathered);
 
 # writing out summary
 write_stats_summary($stats_r);
