@@ -105,6 +105,10 @@ Default n_cores.default
 n_cores.type: int > 0
 n_cores.default: 1
 
+=item -b[y_genome]
+
+Calculate delta-GC stats for each genome? [TRUE]
+
 =item --debug [<log_level>]
 
 Set the log level. Default is log_level.default but if you provide --debug,
@@ -160,7 +164,8 @@ use deltaMass qw/
 load_genome_fasta
 load_reads
 get_frag_GC
-get_GC_stats
+get_genome_GC_stats
+get_total_GC_stats
 write_read_info
 write_stats_summary
 /;
@@ -175,9 +180,11 @@ die "ERROR: min > max\n"
 print STDERR "Loading genomes...\n" unless $ARGV{-quiet};
 my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
 
+
 # parsing reads file
 print STDERR "Loading reads...\n" unless $ARGV{-quiet};
 my $reads_r = load_reads($ARGV{-reads});
+
 
 # creating fragments for each read & calculating GC
 print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
@@ -191,13 +198,28 @@ my $mce = MCE->new(
 		   );
 my %gathered; 
 MCE->process( [keys %$reads_r], { gather => \%gathered });
+MCE->shutdown();
+
 
 # writing all read info to file if debug
 write_read_info(\%gathered, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
 
+
 # calculate variance & CI
-print STDERR "Calculating delta-GC statistics...\n" unless $ARGV{-quiet};
-my $stats_r = get_GC_stats(\%gathered);
+## each genome
+print STDERR "Calculating delta-GC statistics for each genome...\n" unless $ARGV{-quiet};
+MCE->new(
+	 chunk_size => 1,
+	 max_workers => $ARGV{-c} ,
+	 user_func => \&get_genome_GC_stats,
+	 user_args => { 'reads_r' => \%gathered }
+	);
+my %stats;
+MCE->process( [keys %gathered], { gather =>\%stats } );
+
+## all genomes combined
+print STDERR "Calculating delta-GC statistics for all genomes combined...\n" unless $ARGV{-quiet};
+get_total_GC_stats(\%gathered, \%stats);
 
 # writing out summary
-write_stats_summary($stats_r);
+write_stats_summary(\%stats);

@@ -157,7 +157,7 @@ sub load_reads{
       $fasta{$ref}{$Uid}{seq} = "";
       $fasta{$ref}{$Uid}{amp_start} = $amp_start;
       $fasta{$ref}{$Uid}{amp_end} = $amp_end;
-      $fasta{$ref}{$Uid}{amp_strand} = $amp_strand;
+      #$fasta{$ref}{$Uid}{amp_strand} = $amp_strand;
       $fasta{$ref}{$Uid}{desc} = $vals{description};
     }
     else{ # just part of the sequence
@@ -174,7 +174,9 @@ sub load_reads{
 
 =head2 get_frag_GC
 
-creating fragments for each read & calculating GC on each
+Creating fragments for each read & calculating GC on each.
+Called with MCE.
+Return (gather): a hash that replicates input hash along with frag_GC, frag_len, & frag_start
 
 =cut
 
@@ -280,8 +282,7 @@ sub get_frag_GC{
     }
 
   # gathering
-  MCE->gather( $genome, \%res );
-  
+  MCE->gather( $genome, \%res );  
 }
 
 sub get_frag_GC_old{
@@ -374,7 +375,8 @@ sub get_frag_GC_old{
 
 =head write_read_info
 
-Writing out all read info if wanted
+Writing out all read info if wanted.
+For debugging.
 
 =cut
 
@@ -413,57 +415,86 @@ sub write_read_info{
 }
 
 
-=head get_GC_stats
+=head1 get_genome_GC_stats
 
-Calculating GC stats
+Calculating GC stats per genome. 
+Foreach read: 
+   calculate GC diff beteween amplicon & fragment
+   load into stat object
+calculate stats
+load stats into return hash
 
 =cut
 
-push @EXPORT_OK, 'get_GC_stats';
+push @EXPORT_OK, 'get_genome_GC_stats';
 
-sub get_GC_stats{
-  my ($reads_r) = @_;
+sub get_genome_GC_stats{
+
+  my $genome = $_;
+  my ($self) = @_;
+  my $reads_r = $self->user_args->{reads_r};
 
   my %stats;
- 
+  my $genome_id;
+  my $genome_stat = new Statistics::PointEstimation;
+  foreach my $Uid (keys %{$reads_r->{$genome}}){
+
+    $genome_id = join("|", $reads_r->{$genome}{$Uid}{desc}, $genome)
+      unless defined $genome_id;
+    
+    # loading deltaGC of frag & read(amplicon)
+    my $deltaGC = abs($reads_r->{$genome}{$Uid}{amp_GC} - 
+			$reads_r->{$genome}{$Uid}{frag_GC});
+    $genome_stat->add_data($deltaGC);
+  }
+
+  # calculting genome stats
+  $stats{mean} = $genome_stat->mean();
+  $stats{variance} = $genome_stat->variance();
+  $stats{df} = $genome_stat->df();
+  $genome_stat->set_significance(95);
+  $stats{upper_clm_95} = $genome_stat->upper_clm();
+  $genome_stat->set_significance(99);
+  $stats{upper_clm_99} = $genome_stat->upper_clm();
+
+  MCE->gather($genome_id, \%stats);
+}
+
+
+=head1 get_total_GC_stats
+
+Calculating GC stats for all genomes combined.
+Same as get_genome_GC_stats, but reads from all
+genomes are combining. 
+
+=cut
+
+push @EXPORT_OK, 'get_total_GC_stats';
+
+sub get_total_GC_stats{
+  my ($reads_r, $stats_r) = @_;
+
   my $total_stat = new Statistics::PointEstimation;
   foreach my $genome (keys %$reads_r){
-    my $genome_id;
-
-    my $genome_stat = new Statistics::PointEstimation;
     foreach my $Uid (keys %{$reads_r->{$genome}}){
-
-      $genome_id = join("|", $reads_r->{$genome}{$Uid}{desc}, $genome); 
 
       # loading deltaGC of frag & read(amplicon)
       my $deltaGC = abs($reads_r->{$genome}{$Uid}{amp_GC} - 
 			$reads_r->{$genome}{$Uid}{frag_GC});
       $total_stat->add_data($deltaGC);
-      $genome_stat->add_data($deltaGC);
-
-      # calculting genome stats
-      $stats{$genome_id}{mean} = $genome_stat->mean();
-      $stats{$genome_id}{variance} = $genome_stat->variance();
-      $stats{$genome_id}{df} = $genome_stat->df();
-      $genome_stat->set_significance(95);
-      $stats{$genome_id}{upper_clm_95} = $genome_stat->upper_clm();
-      $genome_stat->set_significance(99);
-      $stats{$genome_id}{upper_clm_99} = $genome_stat->upper_clm();
     }
   }
   
   # total 
-  $stats{TOTAL}{mean} = $total_stat->mean();
-  $stats{TOTAL}{variance} = $total_stat->variance();
-  $stats{TOTAL}{df} = $total_stat->df();
+  $stats_r->{TOTAL}{mean} = $total_stat->mean();
+  $stats_r->{TOTAL}{variance} = $total_stat->variance();
+  $stats_r->{TOTAL}{df} = $total_stat->df();
   $total_stat->set_significance(95);
-  $stats{TOTAL}{upper_clm_95} = $total_stat->upper_clm();
+  $stats_r->{TOTAL}{upper_clm_95} = $total_stat->upper_clm();
   $total_stat->set_significance(99);
-  $stats{TOTAL}{upper_clm_99} = $total_stat->upper_clm();
+  $stats_r->{TOTAL}{upper_clm_99} = $total_stat->upper_clm();
   
-
-  #print Dumper %stats;  exit;
-  return \%stats;
+  #print Dumper $stats_r;  exit;
 }
 
 =head2 write_stats_summary
