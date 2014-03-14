@@ -28,9 +28,11 @@ our $VERSION = '0.01';
 
 use base 'Exporter';
 our @EXPORT_OK = '';
-use Carp qw/ confess /;
+use Carp qw/ confess carp /;
 use Data::Dumper;
 use Text::ParseWords;
+use Statistics::Basic;
+use Statistics::PointEstimation;
 use Math::Random qw/
 random_uniform_integer
 random_uniform
@@ -185,15 +187,14 @@ sub get_frag_GC{
 ### start-end around amplicon determine from a uniform distribution
 ## calculate fragment GC
 ## record GC & length
-  my ($genome_seqs_r, $reads_r, $size_dist, $frag_min, $frag_max) = @_;
+  my ($genome_seqs_r, $reads_r, $size_dist, 
+      $frag_min, $frag_max, $mean, $stdev,
+     $primer_buffer) = @_;
 
+  # sanity checks
+  ## values provided
   map{ confess "ERROR: argument missing: $!\n" unless defined $_ } 
-    ($size_dist, $frag_min, $frag_max);
-
-  # options that should be user-provided!!!
-  my $mean = 4100;
-  my $stdev = 100;
-  my $primer_buffer = 70;
+    ($size_dist, $frag_min, $frag_max, $mean, $stdev, $primer_buffer);
 
   # interating through fragments
   foreach my $genome (keys %$reads_r){
@@ -208,7 +209,10 @@ sub get_frag_GC{
       # fragment size
       my $frag_size;
       if($size_dist eq 'uniform'){
-       $frag_size = random_uniform_integer(1, $frag_min, $frag_max);
+	while(1){
+	  $frag_size = random_uniform_integer(1, $frag_min, $frag_max);
+	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+	}
       }
       elsif($size_dist eq 'normal'){
 	while(1){
@@ -223,9 +227,7 @@ sub get_frag_GC{
 	}
       }
       else{ confess "ERROR: do not recognize size distribution\n"; }
-      
-      #print Dumper $frag_size; exit;
-      
+            
       # determine fragment start-end based on amplicon start-end
       ## amplicon center postion
       my $amp_center = int($amp_start + abs($amp_len * 0.5));
@@ -234,12 +236,12 @@ sub get_frag_GC{
       ### start_floor = (primer_buffer + 0.5*amp_len) / frag_size
       my $floor  = ($primer_buffer + 0.5 * $amp_len) / $frag_size; 
       $x = $floor if $x < $floor;
-      my $ceiling = 1 - $floor;
+      my $ceiling = 1 - $floor;                               # ceiling = 1 - floor
       $x = $ceiling if $x > $ceiling;
       my $frag_start = int( $amp_center - ($frag_size * $x) );
 
       ### sanity check 
-      confess "ERROR: frag_start is too far from amplicon\n"
+      carp "WARNING: frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
 	if $frag_start - ($amp_end + $primer_buffer) > $frag_size;
 
       # getting fragment
@@ -253,21 +255,145 @@ sub get_frag_GC{
       else{
 	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $frag_size );
       }
+      
+      # storing amp_start & fragment_start
+      $reads_r->{$genome}{$Uid}{frag_start} = $frag_start;
 
-      # getting fragment GC
+      # getting fragment GC & length
       ($reads_r->{$genome}{$Uid}{frag_GC},$reads_r->{$genome}{$Uid}{frag_len}) =
 	calc_GC( $frag_seq );
     }
   }
-  
+
   #print Dumper $reads_r; exit;
 }
 
-=head2 write_summary
+=head write_read_info
 
-Summary table of GC 
+Writing out all read info if wanted
 
 =cut
+
+push @EXPORT_OK, 'write_read_info';
+
+sub write_read_info{
+  my ($reads_r, $outfile) = @_;
+  
+  # output file
+  open OUT, ">$outfile" or die $!;
+
+  # header
+  print OUT join("\t", qw/genome scaffold read_ID read_GC 
+			 read_length read_start 
+			 frag_GC frag_length frag_start/), "\n";
+
+  # body
+  foreach my $genome (keys %$reads_r){
+    foreach my $Uid (keys %{$reads_r->{$genome}}){
+      print OUT join("\t",
+		     $reads_r->{$genome}{$Uid}{desc},
+		     $genome, 
+		     $Uid, 
+		     $reads_r->{$genome}{$Uid}{amp_GC},
+		     $reads_r->{$genome}{$Uid}{amp_len},
+		     $reads_r->{$genome}{$Uid}{amp_start},		     
+		     $reads_r->{$genome}{$Uid}{frag_GC},
+		     $reads_r->{$genome}{$Uid}{frag_len},
+		     $reads_r->{$genome}{$Uid}{frag_start}
+		    ), "\n";
+    }
+  }
+
+  close OUT or die $!;
+  print STDERR "Read info file written to: '$outfile'\n";
+}
+
+
+=head get_GC_stats
+
+Calculating GC stats
+
+=cut
+
+push @EXPORT_OK, 'get_GC_stats';
+
+sub get_GC_stats{
+  my ($reads_r) = @_;
+
+  my %stats;
+ 
+  my $total_stat = new Statistics::PointEstimation;
+  foreach my $genome (keys %$reads_r){
+    my $genome_id;
+
+    my $genome_stat = new Statistics::PointEstimation;
+    foreach my $Uid (keys %{$reads_r->{$genome}}){
+
+      $genome_id = join("|", $reads_r->{$genome}{$Uid}{desc}, $genome); 
+
+      # loading deltaGC of frag & read(amplicon)
+      my $deltaGC = abs($reads_r->{$genome}{$Uid}{amp_GC} - 
+			$reads_r->{$genome}{$Uid}{frag_GC});
+      $total_stat->add_data($deltaGC);
+      $genome_stat->add_data($deltaGC);
+
+      # calculting genome stats
+      $stats{$genome_id}{mean} = $genome_stat->mean();
+      $stats{$genome_id}{variance} = $genome_stat->variance();
+      $stats{$genome_id}{df} = $genome_stat->df();
+      $genome_stat->set_significance(95);
+      $stats{$genome_id}{upper_clm_95} = $genome_stat->upper_clm();
+      $genome_stat->set_significance(99);
+      $stats{$genome_id}{upper_clm_99} = $genome_stat->upper_clm();
+    }
+  }
+  
+  # total 
+  $stats{TOTAL}{mean} = $total_stat->mean();
+  $stats{TOTAL}{variance} = $total_stat->variance();
+  $stats{TOTAL}{df} = $total_stat->df();
+  $total_stat->set_significance(95);
+  $stats{TOTAL}{upper_clm_95} = $total_stat->upper_clm();
+  $total_stat->set_significance(99);
+  $stats{TOTAL}{upper_clm_99} = $total_stat->upper_clm();
+  
+
+  #print Dumper %stats;  exit;
+  return \%stats;
+}
+
+=head2 write_stats_summary
+
+Writing a summary table to STDOUT
+
+Using %stats produced by sub get_GC_stats
+
+=cut
+
+push @EXPORT_OK, 'write_stats_summary';
+
+sub write_stats_summary{
+  my ($stats_r) = @_;
+
+  foreach my $genome ( sort{ 
+    if($a eq 'TOTAL'){ return -1; }
+    elsif($b eq 'TOTAL'){ return 1; }
+    else{ return $a cmp $b }
+    } keys %$stats_r ){
+    
+    print join("\t", $genome,
+	       $stats_r->{$genome}{mean},
+	       $stats_r->{$genome}{variance},
+	       $stats_r->{$genome}{df},
+	       $stats_r->{$genome}{upper_clm_95},
+	       $stats_r->{$genome}{upper_clm_99}
+	       ), "\n";
+  }
+
+}
+
+
+
 
 
 =head1 AUTHOR

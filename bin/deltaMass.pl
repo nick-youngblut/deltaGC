@@ -20,14 +20,14 @@ deltaMass.pl [options] -reads -genomes
 
 =over
 
-=item -r[eads]=<read_file>
+=item -r[eads] <read_file>
 
 Reads output by grinder
 
 =for Euclid:
 read_file.type: readable
 
-=item -g[enomes]=<genome_file>
+=item -g[enomes] <genome_file>
 
 Fasta file of genomes used as '-reference_file' in grinder
 
@@ -52,25 +52,47 @@ size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_
 size_dist.type.error: <size_dist> must be 'uniform', 'normal', or 'exponential'
 size_dist.default: 'exponential'
 
-=item -min <min_length>
+=item -range <min_length>-<max_length>
 
-Minimum fragment length.
+Minimum & maximum fragment length.
 
-Default: min_length.default
+Default: min_length.default max_length.default
 
 =for Euclid:
-min_length.type: int >= 0
+min_length.type: int > 0
 min_length.default: 4000
+max_length.type: int > 0
+max_length.default: 100000
 
-=item -max <max_length>
+=item -mean <mean_length>
 
-Maximum fragment length.
+Mean fragment length.
 
-Default max_length.default
+Default: mean_length.default
 
 =for Euclid:
-max_length.type: int >= 0
-max_length.default: 100000
+mean_length.type: int > 0
+mean_length.default: 4000
+
+=item -stdev <stdev>
+
+Fragment length standard deviation.
+
+Default: stdev.default
+
+=for Euclid:
+stdev.type: int >=0
+stdev.default: 100
+
+=item -p[rimer_buffer] <primer_buffer>
+
+Fragment must contain this many bp before & after the 'amplicon' (specified by grinder).
+
+Default: primer_buffer.default
+
+=for Euclid
+primer_buffer.type: int >=0
+primer_buffer.default: 70
 
 =item --debug [<log_level>]
 
@@ -81,6 +103,8 @@ then it is log_level.opt_default.
     log_level.type:        int
     log_level.default:     0
     log_level.opt_default: 1
+
+=item --quiet
 
 =item --version
 
@@ -125,21 +149,41 @@ use deltaMass qw/
 load_genome_fasta
 load_reads
 get_frag_GC
+get_GC_stats
+write_read_info
+write_stats_summary
 /;
+
+
+#--- I/O error ---#
+die "ERROR: min > max\n"
+  if $ARGV{-range}{min_length} > $ARGV{-range}{max_length};
 
 # parsing genome file
 ## genome_name => sequence
+print STDERR "Loading genomes...\n" unless $ARGV{-quiet};
 my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
 
 # parsing reads file
+print STDERR "Loading reads...\n" unless $ARGV{-quiet};
 my $reads_r = load_reads($ARGV{-reads});
 
 # creating fragments for each read & calculating GC
+print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
 get_frag_GC($genome_seqs_r, $reads_r, 
-	    $ARGV{'-sd'}, $ARGV{'-min'}, $ARGV{'-max'});
+	    $ARGV{-sd}, 
+	    $ARGV{-range}{min_length},
+	    $ARGV{-range}{max_length},
+	    $ARGV{-mean},
+	    $ARGV{-stdev},
+	    $ARGV{-primer_buffer});
+
+# writing all read info to file if debug
+write_read_info($reads_r, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
 
 # calculate variance & CI
-get_GC_stats($reads_r);
+print STDERR "Calculating delta-GC statistics...\n" unless $ARGV{-quiet};
+my $stats_r = get_GC_stats($reads_r);
 
 # writing out summary
-#write_summary($reads_r);
+write_stats_summary($stats_r);
