@@ -95,19 +95,10 @@ primer_buffer.type: int >=0
 primer_buffer.default: 70
 
 
-=item -c[ore] <n_cores>
+=item -c[orrect]
 
-Number of cores to use.
-
-Default n_cores.default
-
-=for Euclid:
-n_cores.type: int > 0
-n_cores.default: 1
-
-=item -b[y_genome]
-
-Calculate delta-GC stats for each genome? [TRUE]
+Write out new version of the genome fasta file where all sequence
+lines except the last are the same length for each entry? [FALSE]
 
 =item --debug [<log_level>]
 
@@ -159,7 +150,7 @@ use Data::Dumper;
 use Getopt::Euclid;
 use FindBin qw/$Bin/;
 use lib "$Bin";
-use MCE;
+use Bio::DB::Fasta;
 use deltaMass qw/
 load_genome_fasta
 load_reads
@@ -175,42 +166,37 @@ write_stats_summary
 die "ERROR: min > max\n"
   if $ARGV{-range}{min_length} > $ARGV{-range}{max_length};
 
-# parsing genome file
-## genome_name => sequence
-print STDERR "Loading genomes...\n" unless $ARGV{-quiet};
-my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
 
+# correcting genome fasta if neede
+if( $ARGV{-correct} ){
+  print STDERR "Correcting any line length inconsistencies in the genome fasta\n";
+  $ARGV{-genomes} = correct_fasta($ARGV{-genomes});
+}
+
+# make genome database
+print STDERR "Make genome database...\n" unless $ARGV{-quiet};
+
+#my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
+my $db = Bio::DB::Fasta->new($ARGV{-genomes});
 
 # parsing reads file
 print STDERR "Loading reads...\n" unless $ARGV{-quiet};
 my $reads_r = load_reads($ARGV{-reads});
 
-
 # creating fragments for each read & calculating GC
 print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
-get_frag_GC($genome_seqs_r, $reads_r,
-            $ARGV{-sd},
-            $ARGV{-range}{min_length},
-            $ARGV{-range}{max_length},
-            $ARGV{-mean},
-            $ARGV{-stdev},
-            $ARGV{-primer_buffer});
-
-#my $mce = MCE->new(
-#		   chunk_size => 1,
-#		   max_workers => $ARGV{-c},
-#		   user_func => \&get_frag_GC,
-#		   user_args => {'reads_r' => $reads_r,
-#				 'genome_seqs_r' => $genome_seqs_r,
-#				 'argv' => \%ARGV}
-#		   );
-#my %gathered; 
-#MCE->process( [keys %$reads_r], { gather => \%gathered });
-#MCE->shutdown();
+ get_frag_GC($db, $reads_r,
+             $ARGV{-sd},
+             $ARGV{-range}{min_length},
+             $ARGV{-range}{max_length},
+             $ARGV{-mean},
+             $ARGV{-stdev},
+             $ARGV{-primer_buffer});
 
 
 # writing all read info to file if debug
-write_read_info($reads_r, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
+write_read_info($reads_r, $db);
+
 
 
 #--- using R or python for stats calculation ---#
