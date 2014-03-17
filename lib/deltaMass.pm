@@ -83,14 +83,10 @@ sub calc_GC {
   my $len = length $seq;
 
   # GC
-  my %GC = ( G => 0, C => 0 );
-  while( $seq =~ /G/gi ){
-    $GC{G}++;
+  my $GC_sum = 0;
+  while( $seq =~ /[GC]/gi ){
+    $GC_sum++;
   }
-  while( $seq =~ /C/gi ){
-    $GC{C}++;
-  }
-  my $GC_sum = $GC{G} + $GC{C};
   my $GC_content = $GC_sum / $len * 100;
 
   return $GC_content, $len;
@@ -170,12 +166,12 @@ sub load_reads{
       ## amplicon start-end
       my ($amp_start, $amp_end, $amp_strand);
       if( $vals{amplicon} =~ /complement\((.+)\)/){ 
-	($amp_end, $amp_start) = split /\.\./, $1;
-	$amp_strand = -1;
+	($amp_start, $amp_end) = split /\.\./, $1;
+	#$amp_strand = -1;
       }
       else{
 	($amp_start, $amp_end) = split /\.\./, $vals{amplicon};
-	$amp_strand = 1;
+	#$amp_strand = 1;
       }
 
       ## sanity check
@@ -377,9 +373,8 @@ sub get_frag_GC{
       my $frag_start = int( $amp_center - ($frag_size * $x) );
 
       ### sanity check 
-      carp "WARNING for genome '$genome': frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
+      carp "WARNING for genome '$genome': frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_start: $amp_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
 	if $frag_start - ($amp_end + $primer_buffer) > $frag_size;
-
 
       # getting fragment
       ## fragment start-end can span ends of genome (assuming circular genome)
@@ -387,7 +382,7 @@ sub get_frag_GC{
       my %pos;
       ### left wrap
       if($frag_start < 0){
-	$pos{left_wrap} = [$genome_len + $frag_start, $genome_len];
+	$pos{left_wrap} = [$genome_len + $frag_start + 1, $genome_len];
 	$pos{middle} = [1, $frag_size + $frag_start];
       }
       if(! exists $pos{middle}){
@@ -402,10 +397,12 @@ sub get_frag_GC{
       my $frag_seq = "";
       map{ $frag_seq .= $db->seq($genome, ${$pos{$_}}[0], ${$pos{$_}}[1]) } keys %pos; 
 
-      ### sanity check 
-      #my $actual_frag_len = length $frag_seq;
-      #carp "WARNING for genome '$genome': frag_length -> '$actual_frag_len' is not within range! Start_frag_length: $frag_size; frag_start: $frag_start; frag_start2: $frag_start2; genome_length: ", $genome_seqs_r->{$genome}{len}, "\n"
-      # 	if $actual_frag_len < $frag_min or $actual_frag_len > $frag_max;
+      ### sanity check: fragment is encompassing read
+      my ($frag_start_chk, $frag_end_chk) = ($frag_start, $frag_start + $genome_len);
+      $frag_start_chk = 0 if $frag_start_chk < 0;
+      $frag_end_chk = $genome_len if $frag_end_chk > $genome_len;
+      die "ERROR for genome $genome: fragment does not encompass the read!\n"
+	unless $frag_start_chk <= $amp_start and $frag_end_chk >= $amp_end;
       
       # storing amp_start & fragment_start
       $reads_r->{$genome}{$Uid}{frag_start} = $frag_start;
@@ -416,7 +413,7 @@ sub get_frag_GC{
 
       # sanity check
       carp "WARNING: for genome '$genome': frag_length -> ", $reads_r->{$genome}{$Uid}{frag_len},
-	"is not within length range!\tStart_frag_len: $frag_size, frag_start: $frag_start\n"
+	" is not within length range!\tStart_frag_len: $frag_size, frag_start: $frag_start\n"
 	  if $reads_r->{$genome}{$Uid}{frag_len} < $frag_min or 
 	    $reads_r->{$genome}{$Uid}{frag_len} > $frag_max;
     }
