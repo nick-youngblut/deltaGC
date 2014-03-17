@@ -188,21 +188,29 @@ my $reads_r = load_reads($ARGV{-reads});
 
 # creating fragments for each read & calculating GC
 print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
-my $mce = MCE->new(
-		   chunk_size => 1,
-		   max_workers => $ARGV{-c},
-		   user_func => \&get_frag_GC,
-		   user_args => {'reads_r' => $reads_r,
-				 'genome_seqs_r' => $genome_seqs_r,
-				 'argv' => \%ARGV}
-		   );
-my %gathered; 
-MCE->process( [keys %$reads_r], { gather => \%gathered });
-MCE->shutdown();
+get_frag_GC($genome_seqs_r, $reads_r,
+            $ARGV{-sd},
+            $ARGV{-range}{min_length},
+            $ARGV{-range}{max_length},
+            $ARGV{-mean},
+            $ARGV{-stdev},
+            $ARGV{-primer_buffer});
+
+#my $mce = MCE->new(
+#		   chunk_size => 1,
+#		   max_workers => $ARGV{-c},
+#		   user_func => \&get_frag_GC,
+#		   user_args => {'reads_r' => $reads_r,
+#				 'genome_seqs_r' => $genome_seqs_r,
+#				 'argv' => \%ARGV}
+#		   );
+#my %gathered; 
+#MCE->process( [keys %$reads_r], { gather => \%gathered });
+#MCE->shutdown();
 
 
 # writing all read info to file if debug
-write_read_info(\%gathered, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
+write_read_info($reads_r, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
 
 
 # calculate variance & CI
@@ -212,14 +220,14 @@ MCE->new(
 	 chunk_size => 1,
 	 max_workers => $ARGV{-c} ,
 	 user_func => \&get_genome_GC_stats,
-	 user_args => { 'reads_r' => \%gathered }
+	 user_args => { 'reads_r' => $reads_r }
 	);
 my %stats;
-MCE->process( [keys %gathered], { gather =>\%stats } );
+MCE->process( [keys %$reads_r], { gather =>\%stats } );
 
 ## all genomes combined
 print STDERR "Calculating delta-GC statistics for all genomes combined...\n" unless $ARGV{-quiet};
-get_total_GC_stats(\%gathered, \%stats);
+get_total_GC_stats($reads_r, \%stats);
 
 # writing out summary
 write_stats_summary(\%stats);

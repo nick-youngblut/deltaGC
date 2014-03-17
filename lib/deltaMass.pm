@@ -182,7 +182,7 @@ Return (gather): a hash that replicates input hash along with frag_GC, frag_len,
 
 push @EXPORT_OK, 'get_frag_GC';
 
-sub get_frag_GC{
+sub get_frag_GC_MCE{
   my $genome = $_;
   my ($self) = @_;
 
@@ -285,7 +285,7 @@ sub get_frag_GC{
   MCE->gather( $genome, \%res );  
 }
 
-sub get_frag_GC_old{
+sub get_frag_GC{
 # foreach read:
 ## determine random fragment size
 ## pull fragment from genome
