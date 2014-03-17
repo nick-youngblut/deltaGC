@@ -257,9 +257,9 @@ sub get_frag_GC_MCE{
 	if $frag_start - ($amp_end + $primer_buffer) > $frag_size;
 
       # getting fragment
-      ## wrapping around genome sequence string if neede
+      ## wrapping around genome sequence string if needed 
       my $frag_seq;
-      if($frag_start + $frag_size + 1 > $genome_seqs_r->{$genome}{len}){ # wrap
+      if($frag_start + $frag_size + 1 > $genome_seqs_r->{$genome}{len}){ # wrap around genome
 	my $max_len = $genome_seqs_r->{$genome}{len} - $frag_start + 1;
 	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $max_len);
 	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, 0, $frag_size - $max_len);
@@ -267,6 +267,7 @@ sub get_frag_GC_MCE{
       else{
 	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $frag_size );
       }
+
       
       # storing amp_start & fragment_start
       $res{$Uid}{frag_start} = $frag_start;
@@ -313,20 +314,30 @@ sub get_frag_GC{
 
       # fragment size
       my $frag_size;
+      my $time_out = 0;
       if($size_dist eq 'uniform'){
 	while(1){
-	  $frag_size = random_uniform_integer(1, $frag_min, $frag_max);
+	  $time_out++;
+	  die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	    if $time_out > 9999;
+	  $frag_size = random_uniform_integer(1, $frag_min, $frag_max); 
 	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
 	}
       }
       elsif($size_dist eq 'normal'){
 	while(1){
+	  $time_out++;
+	  die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	    if $time_out > 9999;
 	  $frag_size = int random_normal(1, $mean, $stdev);
 	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
 	}
       }
       elsif($size_dist eq 'exponential'){
 	while(1){
+	  $time_out++;
+	  die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	    if $time_out > 9999;
 	  $frag_size = int random_exponential(1, $mean);
 	  last if $frag_size >= $frag_min && $frag_size <= $frag_max;
 	}
@@ -346,20 +357,42 @@ sub get_frag_GC{
       my $frag_start = int( $amp_center - ($frag_size * $x) );
 
       ### sanity check 
-      carp "WARNING: frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
+      carp "WARNING for genome '$genome': frag_start is too far from amplicon!\n\tfrag_start: $frag_start, amp_end: $amp_end, primer_buffer: $primer_buffer, frag_size: $frag_size, amp_center: $amp_center, x: $x\n"
 	if $frag_start - ($amp_end + $primer_buffer) > $frag_size;
 
       # getting fragment
-      ## wrapping around genome sequence string if neede
-      my $frag_seq;
-      if($frag_start + $frag_size + 1 > $genome_seqs_r->{$genome}{len}){ # wrap
-	my $max_len = $genome_seqs_r->{$genome}{len} - $frag_start + 1;
-	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $max_len);
-	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, 0, $frag_size - $max_len);
+      ## wrapping around genome sequence string if needed
+      ### left wrap
+      my $frag_seq = "";
+      my $frag_start2;
+      if($frag_start < 0){ # left wrapping
+	my $left_start = $genome_seqs_r->{$genome}{len} + $frag_start - 1; # 0-index
+	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, $left_start, abs($frag_start));
+	 
+	$frag_start2 = $frag_size + $frag_start; # remaining fragment length to substr
       }
       else{
-	$frag_seq = substr($genome_seqs_r->{$genome}{seq}, $frag_start, $frag_size );
+	$frag_start2 = $frag_start;
       }
+      
+      ### right wrap
+      if($frag_start2 < 0 ){ # if - frag_start, some frag should still be positive
+	die "LOGIC ERROR: fragment is not encompassing read. $!\n";
+      }
+      elsif($frag_start2 + $frag_size > $genome_seqs_r->{$genome}{len}){ # wrap
+	my $max_len = $genome_seqs_r->{$genome}{len} - $frag_start2 + 1;  # max length to the end of the genome
+	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, $frag_start2, $max_len);   
+	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, 0, $frag_size - $max_len);
+      }
+      ### no wrap
+      else{
+	$frag_seq .= substr($genome_seqs_r->{$genome}{seq}, $frag_start2, $frag_size );
+      }
+
+      ### sanity check 
+      my $actual_frag_len = length $frag_seq;
+      carp "WARNING for genome '$genome': frag_length -> '$actual_frag_len' is not within range! Start_frag_length: $frag_size; frag_start: $frag_start; frag_start2: $frag_start2; genome_length: ", $genome_seqs_r->{$genome}{len}, "\n"
+	if $actual_frag_len < $frag_min or $actual_frag_len > $frag_max;
       
       # storing amp_start & fragment_start
       $reads_r->{$genome}{$Uid}{frag_start} = $frag_start;

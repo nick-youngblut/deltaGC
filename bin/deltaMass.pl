@@ -213,21 +213,23 @@ get_frag_GC($genome_seqs_r, $reads_r,
 write_read_info($reads_r, "deltaMass_readInfo.txt") if $ARGV{'--debug'} == 1;
 
 
+#--- using R or python for stats calculation ---#
+
 # calculate variance & CI
 ## each genome
-print STDERR "Calculating delta-GC statistics for each genome...\n" unless $ARGV{-quiet};
-MCE->new(
-	 chunk_size => 1,
-	 max_workers => $ARGV{-c} ,
-	 user_func => \&get_genome_GC_stats,
-	 user_args => { 'reads_r' => $reads_r }
-	);
-my %stats;
-MCE->process( [keys %$reads_r], { gather =>\%stats } );
+# print STDERR "Calculating delta-GC statistics for each genome...\n" unless $ARGV{-quiet};
+# MCE->new(
+# 	 chunk_size => 1,
+# 	 max_workers => $ARGV{-c} ,
+# 	 user_func => \&get_genome_GC_stats,
+# 	 user_args => { 'reads_r' => $reads_r }
+# 	);
+# my %stats;
+# MCE->process( [keys %$reads_r], { gather =>\%stats } );
 
 ## all genomes combined
-print STDERR "Calculating delta-GC statistics for all genomes combined...\n" unless $ARGV{-quiet};
-get_total_GC_stats($reads_r, \%stats);
+#print STDERR "Calculating delta-GC statistics for all genomes combined...\n" unless $ARGV{-quiet};
+#get_total_GC_stats($reads_r, \%stats);
 
 # writing out summary
-write_stats_summary(\%stats);
+#write_stats_summary(\%stats);
