@@ -118,7 +118,9 @@ use warnings;
 use Pod::Usage;
 use Data::Dumper;
 use Getopt::Long;
-use FindBin;
+use FindBin qw/$Bin/;
+use lib "$Bin";
+
 
 #--- args/flags ---#
 pod2usage("$0: No files given.") if ((@ARGV == 0) && (-t STDIN));
@@ -144,8 +146,8 @@ check_file($genome_in, '-genome');
 check_file($seq_in, '-seq');
 
 #--- setting defaults ---#
-use lib "$FindBin::RealBin/../lib";
-use lib "$FindBin::RealBin/../lib/perl5";
+#use lib "$FindBin::RealBin/../lib";
+#use lib "$FindBin::RealBin/../lib/perl5";
 
 #--- MAIN ---#
 # parse gff
@@ -211,7 +213,7 @@ sub get_ssu_GC{
 # getting the GC of each identified SSU sequences
   my ($seq_in, $res_r, $ssu_start, $ssu_end) = @_;
 
-  use deltaMass qw/ calc_GC /;
+  use rnammer_GCfrag qw/ calc_GC /;
   open IN, $seq_in or die $!;
 
   my (%fasta, $tmpkey);

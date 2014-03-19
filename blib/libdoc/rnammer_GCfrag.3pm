@@ -123,93 +123,72 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "deltaMass 3"
-.TH deltaMass 3 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "rnammer_GCfrag 3"
+.TH rnammer_GCfrag 3 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-deltaMass \- scripts for running deltaMass.pl
+rnammer_GCfrag \- The great new rnammer_GCfrag!
 .SH "VERSION"
 .IX Header "VERSION"
 Version 0.01
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
+Quick summary of what the module does.
+.PP
+Perhaps a little code snippet.
+.PP
+.Vb 1
+\&    use rnammer_GCfrag;
+\&
+\&    my $foo = rnammer_GCfrag\->new();
+\&    ...
+.Ve
 .SH "EXPORT"
 .IX Header "EXPORT"
+A list of functions that can be exported.  You can delete this section
+if you don't export anything, such as for a purely object-oriented module.
 .SH "SUBROUTINES/METHODS"
 .IX Header "SUBROUTINES/METHODS"
-.SS "correct_fasta"
-.IX Subsection "correct_fasta"
-Making sure sequence lines for each entry are the same length.
 .SS "calc_GC"
 .IX Subsection "calc_GC"
-.SS "load_genome_fasta"
-.IX Subsection "load_genome_fasta"
-.SS "load_reads"
-.IX Subsection "load_reads"
-Loading reads produced by grinder.
-Fasta format, but headers need to be parsed
-.SS "get_frag_GC"
-.IX Subsection "get_frag_GC"
-Creating fragments for each read & calculating \s-1GC\s0 on each.
-Called with \s-1MCE\s0.
-Return (gather): a hash that replicates input hash along with frag_GC, frag_len, & frag_start
-.PP
-Writing out all read info if wanted.
-For debugging.
-.SH "get_genome_GC_stats"
-.IX Header "get_genome_GC_stats"
-Calculating \s-1GC\s0 stats per genome. 
-Foreach read: 
-   calculate \s-1GC\s0 diff beteween amplicon & fragment
-   load into stat object
-calculate stats
-load stats into return hash
-.SH "get_total_GC_stats"
-.IX Header "get_total_GC_stats"
-Calculating \s-1GC\s0 stats for all genomes combined.
-Same as get_genome_GC_stats, but reads from all
-genomes are combining.
-.SS "write_stats_summary"
-.IX Subsection "write_stats_summary"
-Writing a summary table to \s-1STDOUT\s0
-.PP
-Using \f(CW%stats\fR produced by sub get_GC_stats
+.SS "load_fasta"
+.IX Subsection "load_fasta"
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Nick Youngblut, \f(CW\*(C`<ndy2 at cornell.edu>\*(C'\fR
 .SH "BUGS"
 .IX Header "BUGS"
-Please report any bugs or feature requests to \f(CW\*(C`bug\-deltaMass at rt.cpan.org\*(C'\fR, or through
-the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaMass>.  I will be notified, and then you'll
+Please report any bugs or feature requests to \f(CW\*(C`bug\-rnammer_GCfrag at rt.cpan.org\*(C'\fR, or through
+the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=rnammer_GCfrag>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 .SH "SUPPORT"
 .IX Header "SUPPORT"
 You can find documentation for this module with the perldoc command.
 .PP
 .Vb 1
-\&    perldoc deltaMass
+\&    perldoc rnammer_GCfrag
 .Ve
 .PP
 You can also look for information at:
 .IP "\(bu" 4
 \&\s-1RT:\s0 \s-1CPAN\s0's request tracker (report bugs here)
 .Sp
-<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaMass>
+<http://rt.cpan.org/NoAuth/Bugs.html?Dist=rnammer_GCfrag>
 .IP "\(bu" 4
 AnnoCPAN: Annotated \s-1CPAN\s0 documentation
 .Sp
-<http://annocpan.org/dist/deltaMass>
+<http://annocpan.org/dist/rnammer_GCfrag>
 .IP "\(bu" 4
 \&\s-1CPAN\s0 Ratings
 .Sp
-<http://cpanratings.perl.org/d/deltaMass>
+<http://cpanratings.perl.org/d/rnammer_GCfrag>
 .IP "\(bu" 4
 Search \s-1CPAN\s0
 .Sp
-<http://search.cpan.org/dist/deltaMass/>
+<http://search.cpan.org/dist/rnammer_GCfrag/>
 .SH "ACKNOWLEDGEMENTS"
 .IX Header "ACKNOWLEDGEMENTS"
 .SH "LICENSE AND COPYRIGHT"
@@ -221,9 +200,3 @@ under the terms of either: the \s-1GNU\s0 General Public License as published
 by the Free Software Foundation; or the Artistic License.
 .PP
 See http://dev.perl.org/licenses/ for more information.
-.SH "POD ERRORS"
-.IX Header "POD ERRORS"
-Hey! \fBThe above document had some coding errors, which are explained below:\fR
-.IP "Around line 425:" 4
-.IX Item "Around line 425:"
-Unknown directive: =head

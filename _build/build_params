@@ -109,7 +109,10 @@ do{ my $x = [
          'quiet' => undef,
          'extra_compiler_flags' => [],
          'script_files' => [
-                             './bin/rnammer_GC-frag.pl'
+                             './bin/deltaMass.pl',
+                             './bin/rnammer_GC-frag.pl',
+                             './bin/grinder_readFilter.pl',
+                             './bin/GC_dist.pl'
                            ],
          'build_script' => 'Build',
          'original_prefix' => {},
