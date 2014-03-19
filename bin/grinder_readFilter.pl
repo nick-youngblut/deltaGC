@@ -43,6 +43,16 @@ randomly.
 window.type: +int
 window.default: 100
 
+=item -threads <threads>
+
+Number of threads to use.
+
+Default: threads.default
+
+=for Euclid:
+threads.type: +int
+threads.default: 1
+
 =item --debug [<log_level>]
 
 Set the log level. Default is log_level.default but if you provide --debug,
@@ -102,12 +112,11 @@ use lib "$FindBin::Bin/lib";
 use Bio::SeqIO;
 use Bio::DB::Fasta;
 use GC_dist qw/calc_GC/;
-use MCE::Map;
 use GC_dist qw/correct_fasta/;
 use readFilter qw/
 load_read_itrees
 screen_reads/;
-
+use MCE::Map max_workers => $ARGV{threads};
 
 #--- I/O error ---#
 

@@ -74,6 +74,16 @@ lines except the last are the same length for each entry? [FALSE]
 Write out new version of the read fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
 
+=item -threads <threads>
+
+Number of threads to use.
+
+Default: threads.default
+
+=for Euclid:
+threads.type: +int
+threads.default: 1
+
 =item --debug [<log_level>]
 
 Set the log level. Default is log_level.default but if you provide --debug,
@@ -134,9 +144,10 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 use Bio::DB::Fasta;
 use GC_dist qw/calc_GC/;
-use MCE::Map;
 use List::MoreUtils qw/each_array/;
 use GC_dist qw/ calc_frag_GC_window /;
+use MCE::Map max_workers => $ARGV{-threads};
+
 
 #--- I/O error ---#
 
@@ -179,7 +190,7 @@ while( my ($x,$y) = $ea->()){
 
 ## parsing genome fragments & calculating sliding window GC values
 use Parallel::ForkManager;
-my $pm = Parallel::ForkManager->new(8);
+my $pm = Parallel::ForkManager->new($ARGV{threads});
 
 ### finish statement
 my %GC;
