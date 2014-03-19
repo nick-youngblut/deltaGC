@@ -115,9 +115,6 @@ This software is licensed under the terms of the GPLv3
 #--- modules ---#
 use Data::Dumper;
 use Getopt::Euclid;
-#use FindBin;
-#use lib "$FindBin::Bin/lib";
-use local::lib;
 use Bio::SeqIO;
 use Bio::DB::Fasta;
 use GC_dist qw/calc_GC/;
@@ -126,6 +123,10 @@ use readFilter qw/
 load_read_itrees
 screen_reads/;
 use MCE::Map;
+unless($ARGV{'--debug'}){
+  use local::lib;
+}
+
 
 #--- I/O error ---#
 

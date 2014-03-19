@@ -148,8 +148,6 @@ This software is licensed under the terms of the GPLv3
 
 use Data::Dumper;
 use Getopt::Euclid;
-use FindBin qw/$Bin/;
-use lib "$Bin";
 use Bio::DB::Fasta;
 use deltaMass qw/
 load_genome_fasta
@@ -160,7 +158,9 @@ get_total_GC_stats
 write_read_info
 write_stats_summary
 /;
-
+unless($ARGV{'--debug'}){
+  use local::lib;
+}
 
 #--- I/O error ---#
 die "ERROR: min > max\n"

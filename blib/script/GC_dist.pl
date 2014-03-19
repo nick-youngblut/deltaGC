@@ -81,7 +81,7 @@ Number of threads to use for GC calculations.
 Default: threads.default
 
 =for Euclid:
-threads.type: +int
+threads.type: 0+int
 threads.default: 1
 
 =item --debug [<log_level>]
@@ -146,16 +146,14 @@ This software is licensed under the terms of the GPLv3
 #--- modules ---#
 use Data::Dumper;
 use Getopt::Euclid;
-#use FindBin;
-#use lib "$FindBin::Bin/lib";
-use local::lib;
 use Bio::DB::Fasta;
 use GC_dist qw/calc_GC/;
 use List::MoreUtils qw/each_array/;
 use GC_dist qw/ calc_frag_GC_window /;
-#use MCE::Map;
 use Parallel::ForkManager;
-
+unless($ARGV{'--debug'}){
+  use local::lib;
+}
 
 #--- I/O error ---#
 
@@ -195,7 +193,7 @@ my @read_pos = map { parse_desc() } map { $_->desc } @seq_obs; # read genome-sta
 my $ea = each_array( @ids, @read_pos);
 my %reads;
 while( my ($x,$y) = $ea->()){
-  $reads{$$y[0]}{$x} = [$$y[1], $$y[2]];
+  $reads{$$y[0]}{$x} = [$$y[1], $$y[2], $$y[3]];
 }
 
 ## parsing genome fragments & calculating sliding window GC values
@@ -257,8 +255,18 @@ sub parse_desc{
   map{ die "ERROR: cannot find '$_' in read!\n" 
 	 unless exists $vals{$_} } qw/amplicon reference/;
 
-  $vals{amplicon} =~ /(\d+)\.\.(\d+)/;
+  # strand
+  my $strand;
+  if($vals{amplicon} =~ /complement/){
+    $strand = -1;
+  }
+  else{
+    $strand = 1;
+  }
 
-  return [$vals{reference}, $1, $2];
+  # postion
+  $vals{amplicon} =~ /(\d+)\.\.(\d+)/;
+  
+  return [$vals{reference}, $1, $2, $strand];
 }
 

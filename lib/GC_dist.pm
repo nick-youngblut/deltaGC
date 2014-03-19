@@ -109,7 +109,7 @@ sub calc_frag_GC_window{
 
   my %gc;
   foreach my $read (keys %$reads_r) {
-    my ($read_start, $read_end) = @{$reads_r->{$read}};
+    my ($read_start, $read_end, $read_strand) = @{$reads_r->{$read}};
 
     #finding center of read
     my $center = $read_start + (abs($read_end - $read_start) / 2);
@@ -123,6 +123,9 @@ sub calc_frag_GC_window{
     # getting seq
     my $frag_seq = substr($genome_seq, $frag_start - 1, abs($frag_end - $frag_start) + 1);
 
+    # reversing frag if - strand
+    $frag_seq = reverse $frag_seq if $read_strand == -1;
+    
     # sliding window GC analysis 
     my $frag_len = length $frag_seq;
     for (my $i=0; $i<=($frag_len - 1); $i+=$jump) {	
