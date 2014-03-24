@@ -151,6 +151,7 @@ use GC_dist qw/calc_GC/;
 use List::MoreUtils qw/each_array/;
 use GC_dist qw/ calc_frag_GC_window /;
 use Parallel::ForkManager;
+use Text::ParseWords;
 unless($ARGV{'--debug'}){
   use local::lib;
 }
@@ -247,7 +248,6 @@ foreach my $pid (keys %GC){
 }
 
 #--- subroutines ---#
-use Text::ParseWords;
 sub parse_desc{
   s/>//;
   my %vals = quotewords("=| ", 0, $_);
