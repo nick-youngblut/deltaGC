@@ -40,6 +40,10 @@ genome_file.type: readable
 
 =over
 
+=item -a[mplicon]
+
+Amplicon reads instead of shotgun metagenome reads? [FALSE]
+
 =item -s[ize] <frag_size>
 
 Fragment size (bp) around the read.
@@ -149,15 +153,13 @@ use Getopt::Euclid;
 use Bio::DB::Fasta;
 use GC_dist qw/calc_GC/;
 use List::MoreUtils qw/each_array/;
-use GC_dist qw/ calc_frag_GC_window /;
 use Parallel::ForkManager;
 use Text::ParseWords;
-unless($ARGV{'--debug'}){
-  use local::lib;
-}
+use GC_dist qw/ 
+calc_frag_GC_window 
+parse_desc/;
 
 #--- I/O error ---#
-
 
 #--- MAIN ---#
 # genome fasta loading
@@ -186,7 +188,7 @@ my @ids = $read_db->ids();
 
 ## getting read info
 my @seq_obs = map{ $read_db->get_Seq_by_id($_) } @ids;
-my @read_pos = map { parse_desc() } map { $_->desc } @seq_obs; # read genome-start-end
+my @read_pos = map { parse_desc($_, $ARGV{-amplicon}) } map { $_->desc } @seq_obs; # read genome-start-end
 
 
 ## combining read info by genome
@@ -245,28 +247,5 @@ foreach my $pid (keys %GC){
       }
     }
   }
-}
-
-#--- subroutines ---#
-sub parse_desc{
-  s/>//;
-  my %vals = quotewords("=| ", 0, $_);
-  
-  map{ die "ERROR: cannot find '$_' in read!\n" 
-	 unless exists $vals{$_} } qw/amplicon reference/;
-
-  # strand
-  my $strand;
-  if($vals{amplicon} =~ /complement/){
-    $strand = -1;
-  }
-  else{
-    $strand = 1;
-  }
-
-  # postion
-  $vals{amplicon} =~ /(\d+)\.\.(\d+)/;
-  
-  return [$vals{reference}, $1, $2, $strand];
 }
 

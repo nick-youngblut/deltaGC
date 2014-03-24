@@ -39,6 +39,53 @@ random_normal
 random_exponential/;
 
 
+=head2 parse_desc
+
+parsing sequence description of reads from grinder
+
+=head3 input
+
+* description <string>
+* amplicon? [false] <bool>
+
+=head3 output
+
+* @(reference, start, end, strand)
+
+=cut
+
+push @EXPORT_OK, 'parse_desc';
+
+sub parse_desc{
+  my ($desc, $amp_b) = @_;
+
+  s/>//;
+  my %vals = quotewords("=| ", 0, $desc);
+
+  # checking read descriptions
+  my @chk = ('reference');
+  if($amp_b){ push @chk, 'amplicon'; }
+  else{ push @chk, 'position'; }
+  map{ die "ERROR: cannot find '$_' in read!\n"
+         unless exists $vals{$_} } @chk;
+
+
+  # strand
+  my $strand;
+  if($vals{$chk[1]} =~ /complement/){
+    $strand = -1;
+  }
+  else{
+    $strand = 1;
+  }
+
+  # postion
+  $vals{$chk[1]} =~ /(\d+)\.\.(\d+)/;
+
+  return [$vals{reference}, $1, $2, $strand];
+}
+
+
 =head2 correct_fasta
 
 Making sure sequence lines for each entry are the same length.
