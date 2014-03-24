@@ -58,7 +58,7 @@ Size (bp) of sliding window around read.
 
 =for Euclid:
 window_size.type: int > 0
-window_size.default: 100
+window_size.default: 500
 
 =item -j[ump] <jump_size>
 
@@ -66,7 +66,7 @@ Size (bp) for sliding window jump around read.
 
 =for Euclid:
 jump_size.type: int >0
-jump_size.default: 50 
+jump_size.default: 100
 
 =item -c_genomes
 
