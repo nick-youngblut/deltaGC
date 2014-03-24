@@ -183,7 +183,12 @@ if( $ARGV{-c_reads} ){
 
 ## make read database
 print STDERR "Making read database...\n" unless $ARGV{'--quiet'};
-my $read_db = Bio::DB::Fasta->new($ARGV{-reads});
+sub make_my_id {
+  my $desc = shift;
+  $desc =~ /^>(\S+).*reference=(\S+)/;
+  return join("__", $2, $1);
+}
+my $read_db = Bio::DB::Fasta->new($ARGV{-reads}, -makeid=>\&make_my_id);
 my @ids = $read_db->ids();
 
 ## getting read info
@@ -248,4 +253,6 @@ foreach my $pid (keys %GC){
     }
   }
 }
+
+
 

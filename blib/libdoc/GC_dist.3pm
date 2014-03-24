@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GC_dist 3"
-.TH GC_dist 3 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH GC_dist 3 "2014-03-24" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -140,6 +140,20 @@ Version 0.01
 .IX Header "EXPORT"
 .SH "SUBROUTINES/METHODS"
 .IX Header "SUBROUTINES/METHODS"
+.SS "parse_desc"
+.IX Subsection "parse_desc"
+parsing sequence description of reads from grinder
+.PP
+\fIinput\fR
+.IX Subsection "input"
+.PP
+* description <string>
+* amplicon? [false] <bool>
+.PP
+\fIoutput\fR
+.IX Subsection "output"
+.PP
+* @(reference, start, end, strand)
 .SS "correct_fasta"
 .IX Subsection "correct_fasta"
 Making sure sequence lines for each entry are the same length.

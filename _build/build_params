@@ -68,7 +68,8 @@ do{ my $x = [
          'get_options' => {},
          'dist_version_from' => 'lib/deltaMass.pm',
          '_added_to_INC' => [
-                              '/opt/bioinfo/mugsy_x86-64-v1r2.3//perllibs'
+                              '/opt/bioinfo/mugsy_x86-64-v1r2.3//perllibs',
+                              '/home/nick/perl5/bin/perl5/'
                             ],
          'auto_configure_requires' => 1,
          'create_license' => undef,

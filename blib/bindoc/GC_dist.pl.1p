@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GC_DIST 1"
-.TH GC_DIST 1 "2014-03-19" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH GC_DIST 1 "2014-03-24" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -149,6 +149,9 @@ Reads output by grinder
 Fasta file of genomes used as '\-reference_file' in grinder
 .SH "OPTIONS"
 .IX Header "OPTIONS"
+.IP "\-a[mplicon]" 4
+.IX Item "-a[mplicon]"
+Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
 .IP "\-s[ize] <frag_size>" 4
 .IX Item "-s[ize] <frag_size>"
 Fragment size (bp) around the read.
