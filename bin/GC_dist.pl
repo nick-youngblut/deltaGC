@@ -155,6 +155,7 @@ use GC_dist qw/calc_GC/;
 use List::MoreUtils qw/each_array/;
 use Parallel::ForkManager;
 use Text::ParseWords;
+use Devel::Size qw/total_size/;
 use GC_dist qw/ 
 calc_frag_GC_window 
 parse_desc/;
@@ -225,9 +226,15 @@ $pm->run_on_finish ( # called BEFORE the first call to start()
 
 ### forking 
 print STDERR "Calculating GC content by window...\n";
+print STDERR "Memory of size of the genome DB: ", 
+  sprintf("%.3f", total_size($genome_db) / 1048576), "Mb\n"
+  if $ARGV{'--debug'};
 foreach my $genome (keys %reads){
   $pm->start and next;
   print STDERR "Processing genome: $genome\n" if $ARGV{'--debug'};
+  print STDERR " Memory size of read hash for $genome: ", 
+    sprintf("%.3f", total_size($reads{$genome}) / 1048576), "Mb\n"
+    if $ARGV{'--debug'};
   my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db, $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
   $pm->finish(0, $gc_r);
 }
