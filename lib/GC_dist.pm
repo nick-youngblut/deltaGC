@@ -178,12 +178,41 @@ sub calc_frag_GC_window{
     for (my $i=0; $i<=($frag_len - 1); $i+=$jump) {	
       $gc{$genome}{$read}{$i}{pos} = $i + $frag_start;
       $gc{$genome}{$read}{$i}{GC} = calc_GC( substr($frag_seq, $i, $window) );
+      $gc{$genome}{$read}{$i}{density} = ($gc{$genome}{$read}{$i}{GC} * 0.098 / 100) + 1.660;
     }
   }
  # print Dumper %gc; exit;
   return \%gc;
 }
 
+
+=head2 write_output
+
+Writing output table for hash produced by calc_frag_GC_window
+
+Input: $gc hash; genome_description
+
+=cut
+
+push @EXPORT_OK, 'write_output';
+
+sub write_output{
+  my ($gc_r, $desc) = @_;
+
+  foreach my $genome (keys %$gc_r){
+    # writing out windows for each read
+    my $read_num = 0;
+    foreach my $read (keys %{$gc_r->{$genome}}){
+      $read_num++;
+      foreach my $start (sort {$a<=>$b} keys %{$gc_r->{$genome}{$read}}){
+	print join("\t",$desc, $genome, $read, $read_num, $start,
+		   $gc_r->{$genome}{$read}{$start}{pos},
+		   $gc_r->{$genome}{$read}{$start}{GC},
+		   $gc_r->{$genome}{$read}{$start}{density}), "\n";
+      }
+    }
+  }
+}
 
 
 =head1 AUTHOR
