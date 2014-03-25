@@ -148,10 +148,10 @@ calculating GC over a window for the read
 push @EXPORT_OK, 'calc_frag_GC_window';
 
 sub calc_frag_GC_window{
-  my ($genome, $reads_r, $genome_db, $frag_size, $window, $jump) = @_;
+  my ($genome, $reads_r, $genome_seq, $frag_size, $window, $jump) = @_;
 
   # getting genome seq
-  my $genome_seq = $genome_db->seq($genome);
+ # my $genome_seq = $genome_db->seq($genome);
   my $genome_len = length $genome_seq;
 
   my %gc;
