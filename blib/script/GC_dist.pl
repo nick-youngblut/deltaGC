@@ -226,16 +226,22 @@ $pm->run_on_finish ( # called BEFORE the first call to start()
 
 ### forking 
 print STDERR "Calculating GC content by window...\n";
-print STDERR "Memory of size of the genome DB: ", 
+print STDERR "Memory size of the genome DB: ", 
   sprintf("%.3f", total_size($genome_db) / 1048576), "Mb\n"
   if $ARGV{'--debug'};
 foreach my $genome (keys %reads){
-  $pm->start and next;
   print STDERR "Processing genome: $genome\n" if $ARGV{'--debug'};
-  print STDERR " Memory size of read hash for $genome: ", 
+  # genome sequence
+  my $genome_seq = $genome_db->seq($genome);
+  print STDERR " Memory size of genome sequence: ",
+    sprintf("%.3f", total_size($genome_seq) / 1048576), "Mb\n"
+      if $ARGV{'--debug'};
+
+  $pm->start and next;
+   print STDERR " Memory size of read hash for $genome: ", 
     sprintf("%.3f", total_size($reads{$genome}) / 1048576), "Mb\n"
     if $ARGV{'--debug'};
-  my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db, $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
+  my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_seq, $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
   $pm->finish(0, $gc_r);
 }
 $pm->wait_all_children;
