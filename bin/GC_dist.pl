@@ -68,12 +68,12 @@ Size (bp) for sliding window jump around read.
 jump_size.type: int >0
 jump_size.default: 100
 
-=item -c_genomes
+=item -c_g[enomes]
 
 Write out new version of the genome fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
 
-=item -c_reads
+=item -c_r[eads]
 
 Write out new version of the read fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
@@ -162,6 +162,7 @@ use Text::ParseWords;
 use Devel::Size qw/total_size/;
 use Memory::Usage;
 use GC_dist qw/ 
+correct_fasta
 calc_frag_GC_window 
 parse_desc
 write_output/;
@@ -222,44 +223,16 @@ $mu->dump() if $ARGV{'--debug'};
 ## parsing genome fragments & calculating sliding window GC values
 my $pm = Parallel::ForkManager->new($ARGV{-threads});
 
-### finish statement
-# my %GC;
-# $pm->run_on_finish ( # called BEFORE the first call to start()
-#   sub {
-#     my ($pid, $exit_code, $ident, $exit_signal, $core_dump, $ref) = @_;
- 
-#     # retrieve data structure from child
-#     if ( defined $ref  ) {  # children are not forced to send anything
-#       $GC{$pid} = $ref;
-#       #print STDERR " Memory size of output hash after $pid addition: ", 
-# 	#sprintf("%.3f", total_size($GC{$pid}) / 1048576), "Mb\n"
-# 	 # if $ARGV{'--debug'};      
-#       $mu->record("$pid added to output hash") if $ARGV{'--debug'};
-#     } 
-#     else {  # problems occuring during storage or retrieval will throw a warning
-#       print STDERR "WARNING: No message received from child process $pid!\n";
-#     }
-#   }
-# );
 
 ### forking 
 print STDERR "Calculating GC content by window...\n";
-print STDERR "Memory size of the genome DB: ", 
-  sprintf("%.3f", total_size($genome_db) / 1048576), "Mb\n"
-  if $ARGV{'--debug'};
-
 print join("\t", qw/genome scaf readID read_num pos_local pos_global GC buoyant_density/), "\n";
 foreach my $genome (keys %reads){
   print STDERR "Processing genome: $genome\n" if $ARGV{'--debug'};
-  #print STDERR " Memory size of genome sequence: ",
-  #  sprintf("%.3f", total_size($genome_seq) / 1048576), "Mb\n"
-  #    if $ARGV{'--debug'};
-  
+
   # forking & processing
   $pm->start and next;
-   print STDERR " Memory size of read hash for $genome: ", 
-    sprintf("%.3f", total_size($reads{$genome}) / 1048576), "Mb\n"
-    if $ARGV{'--debug'};
+
   ## gc by window
   my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db->seq($genome), 
 				 $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );

@@ -59,7 +59,7 @@ push @EXPORT_OK, 'parse_desc';
 sub parse_desc{
   my ($desc, $amp_b) = @_;
 
-  s/>//;
+  $desc =~ s/^>//;
   my %vals = quotewords("=| ", 0, $desc);
 
   # checking read descriptions
