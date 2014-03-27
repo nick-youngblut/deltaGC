@@ -36,7 +36,8 @@ use Math::Random qw/
 random_uniform_integer
 random_uniform
 random_normal
-random_exponential/;
+random_exponential
+random_poisson/;
 
 
 =head2 correct_fasta
@@ -209,7 +210,7 @@ sub get_frag_GC{
       $amp_b,
       $size_dist, 
       $frag_min, $frag_max, 
-      $mean, $stdev,
+      $mean, $stdev, $mu,
       $primer_buffer) = @_;
 
   # sanity checks
@@ -217,13 +218,13 @@ sub get_frag_GC{
   map{ confess "ERROR: argument missing: $!\n" unless defined $_ } 
     ($size_dist, $frag_min, $frag_max, $mean, $stdev, $primer_buffer);
 
-
   # genome_info
   my $genome_len = $genome_db->length($genome);
   die "ERROR: cannot find '$genome' in genomes database\n"
     unless defined $genome_len;
 
   # processing each read
+  my @ret;
   foreach my $Uid (@$spec_ids_r){
     my $seqo = $read_db->get_Seq_by_id($Uid);
     my $desc = parse_desc($seqo->desc, $amp_b);
@@ -257,6 +258,15 @@ sub get_frag_GC{
 	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
 	  if $time_out > 9999;
 	$frag_size = int random_exponential(1, $mean);
+	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+      }
+    }
+    elsif($size_dist eq 'poisson'){
+      while(1){
+	$time_out++;
+	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	  if $time_out > 9999;
+	$frag_size = int random_poisson(1, $mu);
 	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
       }
     }
@@ -319,8 +329,7 @@ sub get_frag_GC{
     my ($amp_GC, $amp_length) = calc_GC($seqo->seq);
 
     # writing output
-    print join("\t", 
-	       $genome_db->header($genome),
+    push @ret, [$genome_db->header($genome),
 	       $genome,
 	       $Uid,
 	       $amp_GC,
@@ -329,8 +338,10 @@ sub get_frag_GC{
 	       $frag_GC,
 	       $frag_start,
 	       $frag_length,
-	       $frag_dens), "\n";
+	       $frag_dens]; #, "\n";
   }
+
+  return \@ret;
 }
 
 

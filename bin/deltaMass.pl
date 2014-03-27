@@ -47,13 +47,13 @@ Amplicon reads instead of shotgun metagenome reads? [FALSE]
 =item -sd <size_dist> | -size_distribution <size_dist>
 
 Distribution from which fragment sizes are randomly selected.
-Options: 'uniform','normal','exponential'
+Options: 'uniform','normal','exponential', 'poisson'
 
 Default: size_dist.default
 
 =for Euclid:
-size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential'
-size_dist.type.error: <size_dist> must be 'uniform', 'normal', or 'exponential'
+size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential' || size_dist eq 'poisson'
+size_dist.type.error: <size_dist> must be 'exponential', 'uniform', 'normal', or 'poisson'
 size_dist.default: 'exponential'
 
 =item -range <min_length>-<max_length>
@@ -87,6 +87,16 @@ Default: stdev.default
 =for Euclid:
 stdev.type: int >=0
 stdev.default: 100
+
+=item -mu <mu>
+
+mu parameter for poisson distribution.
+
+Default: mu.default
+
+=for Euclid:
+mu.type: num > 0
+mu.default: 1
 
 =item -p[rimer_buffer] <primer_buffer>
 
@@ -173,6 +183,7 @@ use Data::Dumper;
 use Getopt::Euclid;
 use Bio::DB::Fasta;
 use Parallel::ForkManager;
+use Term::ProgressBar;
 use GC_dist qw/correct_fasta/;
 use deltaMass qw/
 get_frag_GC
@@ -181,9 +192,7 @@ get_total_GC_stats
 write_read_info
 write_stats_summary
 /;
-unless($ARGV{'--debug'}){
-  use local::lib;
-}
+
 
 #--- I/O error ---#
 die "ERROR: min > max\n"
@@ -191,6 +200,9 @@ die "ERROR: min > max\n"
 
 if(defined $ARGV{'-index'}){ $ARGV{'-index'} = 0; }
 else{ $ARGV{'-index'} = 1; }
+
+print STDERR "'-amplicon' not specified. Assuming shotgun reads, which affects how read position info is parsed\n"
+  unless $ARGV{'-amplicon'};
 
 
 # genome fasta loading
@@ -201,9 +213,9 @@ if( $ARGV{-c_genomes} ){
 }
 
 ## make genome database
-print STDERR "Make genome database...\n" unless $ARGV{-quiet};
+if(! $ARGV{-index}){ print STDERR "Loading genome database index...\n" unless $ARGV{-quiet}; }
+else{ print STDERR "Making genome database...\n" unless $ARGV{-quiet}; }
 
-#my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
 my $genome_db = Bio::DB::Fasta->new($ARGV{-genomes}, 
 				    -reindex=>$ARGV{'-index'});
 
@@ -215,7 +227,9 @@ if( $ARGV{-c_reads} ){
 }
 
 ## make read database
-print STDERR "Making read database...\n" unless $ARGV{'--quiet'};
+if(! $ARGV{-index}){ print STDERR "Loading read database index...\n" unless $ARGV{'--quiet'}; }
+else{ print STDERR "Making read database...\n" unless $ARGV{'--quiet'}; }
+
 sub make_my_id {
   my $desc = shift;
   $desc =~ /^>(\S+).*reference=(\S+)/;
@@ -228,21 +242,36 @@ my @read_ids = $read_db->ids();
 
 # creating fragments for each read & calculating GC
 ## header 
+#write_header($ARGV{-output});
 print join("\t", qw/genome scaffold read read_GC read_start read_length
 		    fragment_GC fragment_start fragment_length 
 		    fragment_buoyant_density/), "\n";
 
 ## forking
-my $pm = Parallel::ForkManager->new($ARGV{'-threads'});
+my $pm = Parallel::ForkManager->new( $ARGV{'-threads'} );
+$pm->run_on_finish(
+    sub { 
+      my ($pid, $exit_code, $ident, $exit_signal, 
+	  $core_dump, $ret_r) = @_;
+      map{ print join("\t", @$_), "\n"} @$ret_r;
+    }
+  );
+
+
 my @genomes = $genome_db->ids;
-foreach my $genome (@genomes){
+my $prog = Term::ProgressBar->new(scalar @genomes) unless $ARGV{-quiet};
+#foreach my $genome (@genomes){
+for my $i (0..$#genomes){
+  # status
+  $prog->update($i) unless $ARGV{-quiet};
+  my $genome = $genomes[$i]; 
+
   # read_IDs for that genome
   my @spec_ids = grep /$genome\__/, @read_ids;
 
   $pm->start and next;
   # making random fragments & calculating GC
-  print STDERR "Creating random fragments & calculating GC for genome: '$genome'...\n" unless $ARGV{-quiet};
-  get_frag_GC($genome, \@spec_ids,
+  my $ret_r = get_frag_GC($genome, \@spec_ids,
 	      $genome_db, $read_db,	      
 	      $ARGV{-amplicon},
 	      $ARGV{-sd},
@@ -250,8 +279,22 @@ foreach my $genome (@genomes){
 	      $ARGV{-range}{max_length},
 	      $ARGV{-mean},
 	      $ARGV{-stdev},
+	      $ARGV{-mu},
 	      $ARGV{-primer_buffer});
 
-  $pm->finish;
+  $pm->finish(0, $ret_r);
 }
 $pm->wait_all_children;
+
+
+#--- Subroutines ---#
+sub write_header{
+  my ($output) = @_;
+
+  unlink $output or die $! if -e $output;
+  open OUT, ">$output" or die $!;
+  print OUT join("\t", qw/genome scaffold read read_GC read_start read_length
+		    fragment_GC fragment_start fragment_length 
+		    fragment_buoyant_density/), "\n";
+  close OUT;
+}
