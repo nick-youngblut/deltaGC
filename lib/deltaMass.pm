@@ -321,24 +321,28 @@ sub get_frag_GC{
 
     # calculating fragment GC
     my ($frag_GC, $frag_length) = calc_GC( $frag_seq );
-    
-    # calculating fragment density
+
+    # calculating fragment buoyant density
     my $frag_dens = ($frag_GC * 0.098 / 100) + 1.660;
 
-    # calculting amplicon GC
+    # calculating amplicon GC
     my ($amp_GC, $amp_length) = calc_GC($seqo->seq);
+
+    # calculating amplicon buoyant density
+    my $amp_dens = ($amp_GC * 0.098 / 100) + 1.660;
 
     # writing output
     push @ret, [$genome_db->header($genome),
 	       $genome,
 	       $Uid,
 	       $amp_GC,
+	       $amp_dens,
 	       $amp_start,
 	       $amp_length,
 	       $frag_GC,
+	       $frag_dens,
 	       $frag_start,
-	       $frag_length,
-	       $frag_dens]; #, "\n";
+	       $frag_length]; #, "\n";
   }
 
   return \@ret;
