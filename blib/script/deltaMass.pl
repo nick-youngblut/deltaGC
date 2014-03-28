@@ -294,8 +294,7 @@ sub write_header{
 
   unlink $output or die $! if -e $output;
   open OUT, ">$output" or die $!;
-  print OUT join("\t", qw/genome scaffold read read_GC read_start read_length
-		    fragment_GC fragment_start fragment_length 
-		    fragment_buoyant_density/), "\n";
+  print OUT join("\t", qw/genome scaffold read read_GC read_buoyant_density read_start read_length
+		    fragment_GC fragment_buoyant_density fragment_start fragment_length/), "\n";
   close OUT;
 }
