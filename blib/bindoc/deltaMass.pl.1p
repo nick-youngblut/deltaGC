@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAMASS 1"
-.TH DELTAMASS 1 "2014-03-24" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAMASS 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -147,10 +147,13 @@ Reads output by grinder
 Fasta file of genomes used as '\-reference_file' in grinder
 .SH "OPTIONS"
 .IX Header "OPTIONS"
+.IP "\-a[mplicon]" 4
+.IX Item "-a[mplicon]"
+Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
 .IP "\-sd <size_dist> | \-size_distribution <size_dist>" 4
 .IX Item "-sd <size_dist> | -size_distribution <size_dist>"
 Distribution from which fragment sizes are randomly selected.
-Options: 'uniform','normal','exponential'
+Options: 'uniform','normal','exponential', 'poisson'
 .Sp
 Default: size_dist.default
 .IP "\-range <min_length>\-<max_length>" 4
@@ -168,15 +171,33 @@ Default: mean_length.default
 Fragment length standard deviation.
 .Sp
 Default: stdev.default
+.IP "\-mu <mu>" 4
+.IX Item "-mu <mu>"
+mu parameter for poisson distribution.
+.Sp
+Default: mu.default
 .IP "\-p[rimer_buffer] <primer_buffer>" 4
 .IX Item "-p[rimer_buffer] <primer_buffer>"
 Fragment must contain this many bp before & after the 'amplicon' (specified by grinder).
 .Sp
 Default: primer_buffer.default
-.IP "\-c[orrect]" 4
-.IX Item "-c[orrect]"
+.IP "\-c_g[enomes]" 4
+.IX Item "-c_g[enomes]"
 Write out new version of the genome fasta file where all sequence
 lines except the last are the same length for each entry? [\s-1FALSE\s0]
+.IP "\-c_r[eads]" 4
+.IX Item "-c_r[eads]"
+Write out new version of the read fasta file where all sequence
+lines except the last are the same length for each entry? [\s-1FALSE\s0]
+.IP "\-t[hreads] <threads>" 4
+.IX Item "-t[hreads] <threads>"
+Number of genomes to process in parallel.
+.Sp
+Default: threads.default
+.IP "\-i[ndex]" 4
+.IX Item "-i[ndex]"
+For the genome and read database files (*.index) to be rebuilt 
+(saves time if not rebuilt)? [\s-1TRUE\s0]
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,

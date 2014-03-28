@@ -123,102 +123,74 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "GC_DIST 1"
-.TH GC_DIST 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "deltaMassBin 3"
+.TH deltaMassBin 3 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-GC_dist.pl \-\- sliding window of GC around each grinder\-produced read
+deltaMassBin \- scripts for running deltaMassBin.pl
 .SH "VERSION"
 .IX Header "VERSION"
-This is version 0.0.1
-.SH "USAGE"
-.IX Header "USAGE"
-.Vb 1
-\&    GC_dist.pl [options] > GC_byWindow.txt
-.Ve
-.SH "REQUIRED ARGUMENTS"
-.IX Header "REQUIRED ARGUMENTS"
-.IP "\-r[eads] <read_file>" 4
-.IX Item "-r[eads] <read_file>"
-Reads output by grinder
-.IP "\-g[enomes] <genome_file>" 4
-.IX Item "-g[enomes] <genome_file>"
-Fasta file of genomes used as '\-reference_file' in grinder
-.SH "OPTIONS"
-.IX Header "OPTIONS"
-.IP "\-a[mplicon]" 4
-.IX Item "-a[mplicon]"
-Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
-.IP "\-s[ize] <frag_size>" 4
-.IX Item "-s[ize] <frag_size>"
-Fragment size (bp) around the read.
-.IP "\-w[indow] <window_size>" 4
-.IX Item "-w[indow] <window_size>"
-Size (bp) of sliding window around read.
-.IP "\-j[ump] <jump_size>" 4
-.IX Item "-j[ump] <jump_size>"
-Size (bp) for sliding window jump around read.
-.IP "\-c_g[enomes]" 4
-.IX Item "-c_g[enomes]"
-Write out new version of the genome fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-c_r[eads]" 4
-.IX Item "-c_r[eads]"
-Write out new version of the read fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-t[hreads] <threads>" 4
-.IX Item "-t[hreads] <threads>"
-Number of threads to use for \s-1GC\s0 calculations.
-.Sp
-Default: threads.default
-.IP "\-i[ndex]" 4
-.IX Item "-i[ndex]"
-Force the genome & read database files (*.index) to be rebuilt? [\s-1TRUE\s0]
-.IP "\-\-debug [<log_level>]" 4
-.IX Item "--debug [<log_level>]"
-Set the log level. Default is log_level.default but if you provide \-\-debug,
-then it is log_level.opt_default.
-.IP "\-\-quiet" 4
-.IX Item "--quiet"
-.PD 0
-.IP "\-\-version" 4
-.IX Item "--version"
-.IP "\-\-usage" 4
-.IX Item "--usage"
-.IP "\-\-help" 4
-.IX Item "--help"
-.IP "\-\-man" 4
-.IX Item "--man"
-.PD
-Print the usual program information
-.SH "DESCRIPTION"
-.IX Header "DESCRIPTION"
-Determine how \s-1GC\s0 is distributed around
-each read produced by grinder.
-.PP
-This is an exploratory program to 
-help understand values produced by deltaMass.
-.PP
-The output table can be easily plotted in R
-using ggplot.
-.SS "\s-1WARNINGS\s0"
-.IX Subsection "WARNINGS"
-Delete the genome and read \s-1DB\s0 file (*index files)
-if the script is killed before the \s-1DB\s0 construction
-is completed.
-.SH "EXAMPLES"
-.IX Header "EXAMPLES"
+Version 0.01
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+.SH "EXPORT"
+.IX Header "EXPORT"
+.SH "SUBROUTINES/METHODS"
+.IX Header "SUBROUTINES/METHODS"
+.SS "load_deltaGC_table"
+.IX Subsection "load_deltaGC_table"
+Loading deltaGC table produced by deltaMass.
+Loading by genome [column 1]
+.SS "binByDensity"
+.IX Subsection "binByDensity"
+making a hash of bins foreach buoyant density
+.SS "calcMedianRank"
+.IX Subsection "calcMedianRank"
+calculating median density & ranking genomes by median
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-Nick Youngblut (ndy2@cornell.edu)
+Nick Youngblut, \f(CW\*(C`<ndy2 at cornell.edu>\*(C'\fR
 .SH "BUGS"
 .IX Header "BUGS"
-There are undoubtedly serious bugs lurking somewhere in this code.
-Bug reports and other feedback are most welcome.
-.SH "COPYRIGHT"
-.IX Header "COPYRIGHT"
-Copyright 2010, 2011
-This software is licensed under the terms of the GPLv3
+Please report any bugs or feature requests to \f(CW\*(C`bug\-deltaMassBin at rt.cpan.org\*(C'\fR, or through
+the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaMassBin>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+.SH "SUPPORT"
+.IX Header "SUPPORT"
+You can find documentation for this module with the perldoc command.
+.PP
+.Vb 1
+\&    perldoc deltaMassBin
+.Ve
+.PP
+You can also look for information at:
+.IP "\(bu" 4
+\&\s-1RT:\s0 \s-1CPAN\s0's request tracker (report bugs here)
+.Sp
+<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaMassBin>
+.IP "\(bu" 4
+AnnoCPAN: Annotated \s-1CPAN\s0 documentation
+.Sp
+<http://annocpan.org/dist/deltaMassBin>
+.IP "\(bu" 4
+\&\s-1CPAN\s0 Ratings
+.Sp
+<http://cpanratings.perl.org/d/deltaMassBin>
+.IP "\(bu" 4
+Search \s-1CPAN\s0
+.Sp
+<http://search.cpan.org/dist/deltaMassBin/>
+.SH "ACKNOWLEDGEMENTS"
+.IX Header "ACKNOWLEDGEMENTS"
+.SH "LICENSE AND COPYRIGHT"
+.IX Header "LICENSE AND COPYRIGHT"
+Copyright 2014 Nick Youngblut.
+.PP
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the \s-1GNU\s0 General Public License as published
+by the Free Software Foundation; or the Artistic License.
+.PP
+See http://dev.perl.org/licenses/ for more information.

@@ -68,8 +68,9 @@ do{ my $x = [
          'get_options' => {},
          'dist_version_from' => 'lib/deltaMass.pm',
          '_added_to_INC' => [
-                              '/opt/bioinfo/mugsy_x86-64-v1r2.3//perllibs',
-                              '/home/nick/perl5/bin/perl5/'
+                              '/home/nick/perl5/lib/perl5//x86_64-linux-gnu-thread-multi',
+                              '/home/nick/perl5/lib/perl5/',
+                              '/opt/bioinfo/mugsy_x86-64-v1r2.3//perllibs'
                             ],
          'auto_configure_requires' => 1,
          'create_license' => undef,
@@ -112,6 +113,7 @@ do{ my $x = [
          'script_files' => [
                              './bin/deltaMass.pl',
                              './bin/rnammer_GC-frag.pl',
+                             './bin/deltaMassBin.pl',
                              './bin/grinder_readFilter.pl',
                              './bin/GC_dist.pl'
                            ],

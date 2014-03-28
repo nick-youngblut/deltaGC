@@ -68,12 +68,12 @@ Size (bp) for sliding window jump around read.
 jump_size.type: int >0
 jump_size.default: 100
 
-=item -c_genomes
+=item -c_g[enomes]
 
 Write out new version of the genome fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
 
-=item -c_reads
+=item -c_r[eads]
 
 Write out new version of the read fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
@@ -87,6 +87,10 @@ Default: threads.default
 =for Euclid:
 threads.type: 0+int
 threads.default: 1
+
+=item -i[ndex]
+
+Force the genome & read database files (*.index) to be rebuilt? [TRUE]
 
 =item --debug [<log_level>]
 
@@ -156,13 +160,22 @@ use List::MoreUtils qw/each_array/;
 use Parallel::ForkManager;
 use Text::ParseWords;
 use Devel::Size qw/total_size/;
+use Memory::Usage;
 use GC_dist qw/ 
+correct_fasta
 calc_frag_GC_window 
-parse_desc/;
+parse_desc
+write_output/;
 
 #--- I/O error ---#
+if(defined $ARGV{'-index'}){  $ARGV{'-index'} = 0; }
+else{  $ARGV{'-index'} = 1; }
 
 #--- MAIN ---#
+# memory
+my $mu = Memory::Usage->new();
+$mu->record('Starting memory') if $ARGV{'--debug'};
+
 # genome fasta loading
 ## correcting genome fasta if needed
 if( $ARGV{-c_genomes} ){
@@ -172,7 +185,8 @@ if( $ARGV{-c_genomes} ){
 
 ## make genome database
 print STDERR "Making genome database...\n" unless $ARGV{'--quiet'};
-my $genome_db = Bio::DB::Fasta->new($ARGV{-genomes});
+my $genome_db = Bio::DB::Fasta->new($ARGV{-genomes}, -reindex=>$ARGV{'-index'});
+$mu->record('Genome db created') if $ARGV{'--debug'};
 
 
 # load read info
@@ -189,13 +203,12 @@ sub make_my_id {
   $desc =~ /^>(\S+).*reference=(\S+)/;
   return join("__", $2, $1);
 }
-my $read_db = Bio::DB::Fasta->new($ARGV{-reads}, -makeid=>\&make_my_id);
+my $read_db = Bio::DB::Fasta->new($ARGV{-reads}, -makeid=>\&make_my_id, -reindex=>$ARGV{'-index'});
 my @ids = $read_db->ids();
 
 ## getting read info
 my @seq_obs = map{ $read_db->get_Seq_by_id($_) } @ids;
 my @read_pos = map { parse_desc($_, $ARGV{-amplicon}) } map { $_->desc } @seq_obs; # read genome-start-end
-
 
 ## combining read info by genome
 # genome => read_id => [start|end] => value
@@ -204,68 +217,34 @@ my %reads;
 while( my ($x,$y) = $ea->()){
   $reads{$$y[0]}{$x} = [$$y[1], $$y[2], $$y[3]];
 }
+$mu->record('Created read hash') if $ARGV{'--debug'};
+$mu->dump() if $ARGV{'--debug'};
 
 ## parsing genome fragments & calculating sliding window GC values
 my $pm = Parallel::ForkManager->new($ARGV{-threads});
 
-### finish statement
-my %GC;
-$pm->run_on_finish ( # called BEFORE the first call to start()
-  sub {
-    my ($pid, $exit_code, $ident, $exit_signal, $core_dump, $ref) = @_;
- 
-    # retrieve data structure from child
-    if ( defined $ref  ) {  # children are not forced to send anything
-      $GC{$pid} = $ref;
-    } 
-    else {  # problems occuring during storage or retrieval will throw a warning
-      print STDERR "WARNING: No message received from child process $pid!\n";
-    }
-  }
-);
 
 ### forking 
 print STDERR "Calculating GC content by window...\n";
-print STDERR "Memory size of the genome DB: ", 
-  sprintf("%.3f", total_size($genome_db) / 1048576), "Mb\n"
-  if $ARGV{'--debug'};
+print join("\t", qw/genome scaf readID read_num pos_local pos_global GC buoyant_density/), "\n";
 foreach my $genome (keys %reads){
   print STDERR "Processing genome: $genome\n" if $ARGV{'--debug'};
-  # genome sequence
-  my $genome_seq = $genome_db->seq($genome);
-  print STDERR " Memory size of genome sequence: ",
-    sprintf("%.3f", total_size($genome_seq) / 1048576), "Mb\n"
-      if $ARGV{'--debug'};
 
+  # forking & processing
   $pm->start and next;
-   print STDERR " Memory size of read hash for $genome: ", 
-    sprintf("%.3f", total_size($reads{$genome}) / 1048576), "Mb\n"
-    if $ARGV{'--debug'};
-  my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_seq, $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
-  $pm->finish(0, $gc_r);
+
+  ## gc by window
+  my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db->seq($genome), 
+				 $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
+  ## output
+  write_output($gc_r, $genome_db->header($genome));
+
+  $pm->finish();
 }
 $pm->wait_all_children;
 
-
-### writing output 
-print join("\t", qw/genome scaf readID read_num pos_local pos_global GC/), "\n";
-foreach my $pid (keys %GC){
-  foreach my $genome (keys %{$GC{$pid}}){
-    # getting description
-    my $desc = $genome_db->header($genome);
-
-    # writing out windows for each read
-    my $read_num = 0;
-    foreach my $read (keys %{$GC{$pid}{$genome}}){
-      $read_num++;
-      foreach my $start (sort {$a<=>$b} keys %{$GC{$pid}{$genome}{$read}}){
-	print join("\t",$desc, $genome, $read, $read_num, $start, 
-		   $GC{$pid}{$genome}{$read}{$start}{pos},
-		   $GC{$pid}{$genome}{$read}{$start}{GC}), "\n";
-      }
-    }
-  }
-}
-
+# debug
+$mu->record('All children completed') if $ARGV{'--debug'};
+$mu->dump() if $ARGV{'--debug'};
 
 

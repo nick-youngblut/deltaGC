@@ -40,16 +40,20 @@ genome_file.type: readable
 
 =over
 
+=item -a[mplicon]
+
+Amplicon reads instead of shotgun metagenome reads? [FALSE]
+
 =item -sd <size_dist> | -size_distribution <size_dist>
 
 Distribution from which fragment sizes are randomly selected.
-Options: 'uniform','normal','exponential'
+Options: 'uniform','normal','exponential', 'poisson'
 
 Default: size_dist.default
 
 =for Euclid:
-size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential'
-size_dist.type.error: <size_dist> must be 'uniform', 'normal', or 'exponential'
+size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential' || size_dist eq 'poisson'
+size_dist.type.error: <size_dist> must be 'exponential', 'uniform', 'normal', or 'poisson'
 size_dist.default: 'exponential'
 
 =item -range <min_length>-<max_length>
@@ -84,6 +88,16 @@ Default: stdev.default
 stdev.type: int >=0
 stdev.default: 100
 
+=item -mu <mu>
+
+mu parameter for poisson distribution.
+
+Default: mu.default
+
+=for Euclid:
+mu.type: num > 0
+mu.default: 1
+
 =item -p[rimer_buffer] <primer_buffer>
 
 Fragment must contain this many bp before & after the 'amplicon' (specified by grinder).
@@ -94,11 +108,30 @@ Default: primer_buffer.default
 primer_buffer.type: int >=0
 primer_buffer.default: 70
 
-
-=item -c[orrect]
+=item -c_g[enomes]
 
 Write out new version of the genome fasta file where all sequence
 lines except the last are the same length for each entry? [FALSE]
+
+=item -c_r[eads]
+
+Write out new version of the read fasta file where all sequence
+lines except the last are the same length for each entry? [FALSE]
+
+=item -t[hreads] <threads>
+
+Number of genomes to process in parallel.
+
+Default: threads.default
+
+=for Euclid:
+threads.type: int >=0
+threads.default: 0
+
+=item -i[ndex]
+
+For the genome and read database files (*.index) to be rebuilt 
+(saves time if not rebuilt)? [TRUE]
 
 =item --debug [<log_level>]
 
@@ -149,73 +182,119 @@ This software is licensed under the terms of the GPLv3
 use Data::Dumper;
 use Getopt::Euclid;
 use Bio::DB::Fasta;
+use Parallel::ForkManager;
+use Term::ProgressBar;
+use GC_dist qw/correct_fasta/;
 use deltaMass qw/
-load_genome_fasta
-load_reads
 get_frag_GC
 get_genome_GC_stats
 get_total_GC_stats
 write_read_info
 write_stats_summary
 /;
-unless($ARGV{'--debug'}){
-  use local::lib;
-}
+
 
 #--- I/O error ---#
 die "ERROR: min > max\n"
   if $ARGV{-range}{min_length} > $ARGV{-range}{max_length};
 
+if(defined $ARGV{'-index'}){ $ARGV{'-index'} = 0; }
+else{ $ARGV{'-index'} = 1; }
 
-# correcting genome fasta if neede
-if( $ARGV{-correct} ){
+print STDERR "'-amplicon' not specified. Assuming shotgun reads, which affects how read position info is parsed\n"
+  unless $ARGV{'-amplicon'};
+
+
+# genome fasta loading
+## correcting genome fasta if neede
+if( $ARGV{-c_genomes} ){
   print STDERR "Correcting any line length inconsistencies in the genome fasta\n";
   $ARGV{-genomes} = correct_fasta($ARGV{-genomes});
 }
 
-# make genome database
-print STDERR "Make genome database...\n" unless $ARGV{-quiet};
+## make genome database
+if(! $ARGV{-index}){ print STDERR "Loading genome database index...\n" unless $ARGV{-quiet}; }
+else{ print STDERR "Making genome database...\n" unless $ARGV{-quiet}; }
 
-#my $genome_seqs_r = load_genome_fasta($ARGV{-genomes});
-my $db = Bio::DB::Fasta->new($ARGV{-genomes});
+my $genome_db = Bio::DB::Fasta->new($ARGV{-genomes}, 
+				    -reindex=>$ARGV{'-index'});
 
 # parsing reads file
-print STDERR "Loading reads...\n" unless $ARGV{-quiet};
-my $reads_r = load_reads($ARGV{-reads});
+##correcting reads if needed
+if( $ARGV{-c_reads} ){
+  print STDERR "Correcting any line length inconsistencies in the reads fasta\n";
+  $ARGV{-reads} = correct_fasta($ARGV{-reads});
+}
+
+## make read database
+if(! $ARGV{-index}){ print STDERR "Loading read database index...\n" unless $ARGV{'--quiet'}; }
+else{ print STDERR "Making read database...\n" unless $ARGV{'--quiet'}; }
+
+sub make_my_id {
+  my $desc = shift;
+  $desc =~ /^>(\S+).*reference=(\S+)/;
+  return join("__", $2, $1);
+}
+my $read_db = Bio::DB::Fasta->new($ARGV{-reads}, 
+				  -makeid=>\&make_my_id, 
+				  -reindex=>$ARGV{'-index'});
+my @read_ids = $read_db->ids();
 
 # creating fragments for each read & calculating GC
-print STDERR "Creating random fragments & calculating GC...\n" unless $ARGV{-quiet};
- get_frag_GC($db, $reads_r,
-             $ARGV{-sd},
-             $ARGV{-range}{min_length},
-             $ARGV{-range}{max_length},
-             $ARGV{-mean},
-             $ARGV{-stdev},
-             $ARGV{-primer_buffer});
+## header 
+#write_header($ARGV{-output});
+print join("\t", qw/genome scaffold read read_GC read_start read_length
+		    fragment_GC fragment_start fragment_length 
+		    fragment_buoyant_density/), "\n";
+
+## forking
+my $pm = Parallel::ForkManager->new( $ARGV{'-threads'} );
+$pm->run_on_finish(
+    sub { 
+      my ($pid, $exit_code, $ident, $exit_signal, 
+	  $core_dump, $ret_r) = @_;
+      map{ print join("\t", @$_), "\n"} @$ret_r;
+    }
+  );
 
 
-# writing all read info to file if debug
-write_read_info($reads_r, $db);
+my @genomes = $genome_db->ids;
+my $prog = Term::ProgressBar->new(scalar @genomes) unless $ARGV{-quiet};
+#foreach my $genome (@genomes){
+for my $i (0..$#genomes){
+  # status
+  $prog->update($i) unless $ARGV{-quiet};
+  my $genome = $genomes[$i]; 
+
+  # read_IDs for that genome
+  my @spec_ids = grep /$genome\__/, @read_ids;
+
+  $pm->start and next;
+  # making random fragments & calculating GC
+  my $ret_r = get_frag_GC($genome, \@spec_ids,
+	      $genome_db, $read_db,	      
+	      $ARGV{-amplicon},
+	      $ARGV{-sd},
+	      $ARGV{-range}{min_length},
+	      $ARGV{-range}{max_length},
+	      $ARGV{-mean},
+	      $ARGV{-stdev},
+	      $ARGV{-mu},
+	      $ARGV{-primer_buffer});
+
+  $pm->finish(0, $ret_r);
+}
+$pm->wait_all_children;
 
 
+#--- Subroutines ---#
+sub write_header{
+  my ($output) = @_;
 
-#--- using R or python for stats calculation ---#
-
-# calculate variance & CI
-## each genome
-# print STDERR "Calculating delta-GC statistics for each genome...\n" unless $ARGV{-quiet};
-# MCE->new(
-# 	 chunk_size => 1,
-# 	 max_workers => $ARGV{-c} ,
-# 	 user_func => \&get_genome_GC_stats,
-# 	 user_args => { 'reads_r' => $reads_r }
-# 	);
-# my %stats;
-# MCE->process( [keys %$reads_r], { gather =>\%stats } );
-
-## all genomes combined
-#print STDERR "Calculating delta-GC statistics for all genomes combined...\n" unless $ARGV{-quiet};
-#get_total_GC_stats($reads_r, \%stats);
-
-# writing out summary
-#write_stats_summary(\%stats);
+  unlink $output or die $! if -e $output;
+  open OUT, ">$output" or die $!;
+  print OUT join("\t", qw/genome scaffold read read_GC read_start read_length
+		    fragment_GC fragment_start fragment_length 
+		    fragment_buoyant_density/), "\n";
+  close OUT;
+}

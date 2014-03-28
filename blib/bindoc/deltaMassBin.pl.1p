@@ -123,69 +123,46 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "GC_DIST 1"
-.TH GC_DIST 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "DELTAMASSBIN 1"
+.TH DELTAMASSBIN 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-GC_dist.pl \-\- sliding window of GC around each grinder\-produced read
+template.pl \-\- basic description here
 .SH "VERSION"
 .IX Header "VERSION"
 This is version 0.0.1
 .SH "USAGE"
 .IX Header "USAGE"
 .Vb 1
-\&    GC_dist.pl [options] > GC_byWindow.txt
+\&    template.pl [options]
 .Ve
 .SH "REQUIRED ARGUMENTS"
 .IX Header "REQUIRED ARGUMENTS"
-.IP "\-r[eads] <read_file>" 4
-.IX Item "-r[eads] <read_file>"
-Reads output by grinder
-.IP "\-g[enomes] <genome_file>" 4
-.IX Item "-g[enomes] <genome_file>"
-Fasta file of genomes used as '\-reference_file' in grinder
+.IP "<filename>" 4
+.IX Item "<filename>"
+tab-delimited file produced by deltaMass.pl. ('\-' if from \s-1STDIN\s0)
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-.IP "\-a[mplicon]" 4
-.IX Item "-a[mplicon]"
-Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
-.IP "\-s[ize] <frag_size>" 4
-.IX Item "-s[ize] <frag_size>"
-Fragment size (bp) around the read.
-.IP "\-w[indow] <window_size>" 4
-.IX Item "-w[indow] <window_size>"
-Size (bp) of sliding window around read.
-.IP "\-j[ump] <jump_size>" 4
-.IX Item "-j[ump] <jump_size>"
-Size (bp) for sliding window jump around read.
-.IP "\-c_g[enomes]" 4
-.IX Item "-c_g[enomes]"
-Write out new version of the genome fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-c_r[eads]" 4
-.IX Item "-c_r[eads]"
-Write out new version of the read fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-t[hreads] <threads>" 4
-.IX Item "-t[hreads] <threads>"
-Number of threads to use for \s-1GC\s0 calculations.
+.IP "\-b[inwidth] <binwidth>" 4
+.IX Item "-b[inwidth] <binwidth>"
+fragment_buoyant_density binwidth.
 .Sp
-Default: threads.default
-.IP "\-i[ndex]" 4
-.IX Item "-i[ndex]"
-Force the genome & read database files (*.index) to be rebuilt? [\s-1TRUE\s0]
+Default: binwidth.default
+.IP "\-range <min>\-<max>" 4
+.IX Item "-range <min>-<max>"
+Minimum & maximum fragment_buoyant_density
+.Sp
+Default: min.default\-max.default
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,
 then it is log_level.opt_default.
-.IP "\-\-quiet" 4
-.IX Item "--quiet"
-.PD 0
 .IP "\-\-version" 4
 .IX Item "--version"
+.PD 0
 .IP "\-\-usage" 4
 .IX Item "--usage"
 .IP "\-\-help" 4
@@ -196,19 +173,13 @@ then it is log_level.opt_default.
 Print the usual program information
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Determine how \s-1GC\s0 is distributed around
-each read produced by grinder.
+Bin data produced by deltaMass.pl in terms of
+fragment_buoyant_density. This makes it easier
+to produce a heatmap of buoyant densities with ggplot.
 .PP
-This is an exploratory program to 
-help understand values produced by deltaMass.
-.PP
-The output table can be easily plotted in R
-using ggplot.
-.SS "\s-1WARNINGS\s0"
-.IX Subsection "WARNINGS"
-Delete the genome and read \s-1DB\s0 file (*index files)
-if the script is killed before the \s-1DB\s0 construction
-is completed.
+Also, the median fragment_buoyant_density
+is calculated for each genome and each genome
+is ranked by median fragment_buoyant_density.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SH "AUTHOR"

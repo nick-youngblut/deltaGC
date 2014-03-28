@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GC_dist 3"
-.TH GC_dist 3 "2014-03-24" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH GC_dist 3 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -162,6 +162,11 @@ Making sure sequence lines for each entry are the same length.
 .SS "calc_frag_GC_window"
 .IX Subsection "calc_frag_GC_window"
 calculating \s-1GC\s0 over a window for the read
+.SS "write_output"
+.IX Subsection "write_output"
+Writing output table for hash produced by calc_frag_GC_window
+.PP
+Input: \f(CW$gc\fR hash; genome_description
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Nick Youngblut, \f(CW\*(C`<ndy2 at cornell.edu>\*(C'\fR

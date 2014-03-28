@@ -259,6 +259,7 @@ $pm->run_on_finish(
 
 
 my @genomes = $genome_db->ids;
+print STDERR "Creating fragments & calculating GC...\n" unless $ARGV{-quiet};
 my $prog = Term::ProgressBar->new(scalar @genomes) unless $ARGV{-quiet};
 #foreach my $genome (@genomes){
 for my $i (0..$#genomes){
