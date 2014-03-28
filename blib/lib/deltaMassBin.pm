@@ -51,13 +51,16 @@ sub load_deltaGC_table{
 
   my %tbl;
   my @densities;
-  while(<>){
-    if($.==1){ 
-      chomp;
-      print join("\t", $_, qw/bin_min bin_max count median median_rank/), "\n";
-      next; }
-    
+  while(<$fh>){
     chomp;
+    
+    #header
+    if($.==1){ 
+      print join("\t", $_, qw/bin_min bin_max amp_count frag_count median median_rank/), "\n";
+      next; 
+    }
+    
+    # body
     next if /^\s$/;
     my @l = split /\t/;
 
@@ -72,7 +75,7 @@ sub load_deltaGC_table{
 
 =head2 binByDensity
 
-making a hash of bins foreach buoyant density
+making a hash of bins foreach amplicon & fragment buoyant density
 
 =cut
 
@@ -84,18 +87,27 @@ sub binByDensity{
   my %bins;
   foreach my $genome (keys %$tbl_r){
     foreach  my $Uid (keys %{$tbl_r->{$genome}}){
-      my $density = ${$tbl_r->{$genome}{$Uid}}[8];
+      my $amp_dens = ${$tbl_r->{$genome}{$Uid}}[3];
+      my $frag_dens = ${$tbl_r->{$genome}{$Uid}}[7];
       foreach my $bin (@$binRanges_r){
 	# intializing bin
-	unless(exists $bins{$genome}{$bin->[2]}){
-	  $bins{$genome}{$bin->[2]}{count} = 0;
-	  $bins{$genome}{$bin->[2]}{row} = [('NA') x 9];
+	unless(exists $bins{$genome}{$bin->[2]}){ # bin by 
+	  $bins{$genome}{$bin->[2]}{amp_count} = 0;
+	  $bins{$genome}{$bin->[2]}{frag_count} = 0;
+	  $bins{$genome}{$bin->[2]}{row} = [('NA') x 10];
 	}
 
 	# adding to bin
-	if( $density >= $bin->[0] && 
-	    $density < $bin->[1]){
-	  $bins{$genome}{$bin->[2]}{count}++;
+	## amplicon
+	if( $amp_dens >= $bin->[0] && 
+	    $amp_dens < $bin->[1]){
+	  $bins{$genome}{$bin->[2]}{amp_count}++;
+	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
+	}
+	## fragment
+	if( $frag_dens >= $bin->[0] && 
+	    $frag_dens < $bin->[1]){
+	  $bins{$genome}{$bin->[2]}{frag_count}++;
 	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
 	}
       }
@@ -126,7 +138,7 @@ sub calcMedianRank{
     my $stat = Statistics::Descriptive::Full->new();
 
     foreach my $Uid(keys %{$tbl_r->{$genome}}){
-      $stat->add_data(${$tbl_r->{$genome}{$Uid}}[8]); # adding density values
+      $stat->add_data(${$tbl_r->{$genome}{$Uid}}[7]); # adding density values
     }
     $medians{$genome}{median} = $stat->median();
   }

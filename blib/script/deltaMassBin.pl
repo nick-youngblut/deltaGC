@@ -77,8 +77,9 @@ Print the usual program information
 =head1 DESCRIPTION
 
 Bin data produced by deltaMass.pl in terms of
-fragment_buoyant_density. This makes it easier
-to produce a heatmap of buoyant densities with ggplot.
+read(amplicon)_buoyant_density & fragment_buoyant_density. 
+This makes it easier to produce a heatmap
+of buoyant densities with ggplot.
 
 Also, the median fragment_buoyant_density
 is calculated for each genome and each genome
@@ -138,7 +139,8 @@ foreach my $genome (keys %$bins_r){
 	       $genome, # genome_ID
 	       @{$bins_r->{$genome}{$bin}{row}}, # row values (random draw from bin)
 	       split (/-/, $bin), # bin range
-	       $bins_r->{$genome}{$bin}{count}, # count in bin
+	       $bins_r->{$genome}{$bin}{amp_count}, # count in bin for amplicon
+	       $bins_r->{$genome}{$bin}{frag_count}, # count in bin for fragment
 	       $stats_r->{$genome}{median},     # median 
 	       $stats_r->{$genome}{rank}        # rank by median
 	       ), "\n";

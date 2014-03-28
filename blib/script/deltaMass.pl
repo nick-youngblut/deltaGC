@@ -243,7 +243,8 @@ my @read_ids = $read_db->ids();
 # creating fragments for each read & calculating GC
 ## header 
 #write_header($ARGV{-output});
-print join("\t", qw/genome scaffold read read_GC read_start read_length
+print join("\t", qw/genome scaffold read read_GC read_buoyant_density 
+		    read_start read_length
 		    fragment_GC fragment_start fragment_length 
 		    fragment_buoyant_density/), "\n";
 

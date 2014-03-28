@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAMASSBIN 1"
-.TH DELTAMASSBIN 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAMASSBIN 1 "2014-03-28" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -174,8 +174,9 @@ Print the usual program information
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Bin data produced by deltaMass.pl in terms of
-fragment_buoyant_density. This makes it easier
-to produce a heatmap of buoyant densities with ggplot.
+read(amplicon)_buoyant_density & fragment_buoyant_density. 
+This makes it easier to produce a heatmap
+of buoyant densities with ggplot.
 .PP
 Also, the median fragment_buoyant_density
 is calculated for each genome and each genome

@@ -56,7 +56,6 @@ sub load_deltaGC_table{
     
     #header
     if($.==1){ 
-      chomp;
       print join("\t", $_, qw/bin_min bin_max amp_count frag_count median median_rank/), "\n";
       next; 
     }
@@ -139,7 +138,7 @@ sub calcMedianRank{
     my $stat = Statistics::Descriptive::Full->new();
 
     foreach my $Uid(keys %{$tbl_r->{$genome}}){
-      $stat->add_data(${$tbl_r->{$genome}{$Uid}}[8]); # adding density values
+      $stat->add_data(${$tbl_r->{$genome}{$Uid}}[7]); # adding density values
     }
     $medians{$genome}{median} = $stat->median();
   }
