@@ -245,8 +245,8 @@ my @read_ids = $read_db->ids();
 #write_header($ARGV{-output});
 print join("\t", qw/genome scaffold read read_GC read_buoyant_density 
 		    read_start read_length
-		    fragment_GC fragment_start fragment_length 
-		    fragment_buoyant_density/), "\n";
+		    fragment_GC fragment_buoyant_density 
+		    fragment_start fragment_length/), "\n";
 
 ## forking
 my $pm = Parallel::ForkManager->new( $ARGV{'-threads'} );

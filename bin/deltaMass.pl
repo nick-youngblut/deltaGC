@@ -242,7 +242,6 @@ my @read_ids = $read_db->ids();
 
 # creating fragments for each read & calculating GC
 ## header 
-#write_header($ARGV{-output});
 print join("\t", qw/genome scaffold read read_GC read_buoyant_density 
 		    read_start read_length
 		    fragment_GC fragment_buoyant_density 
@@ -289,13 +288,3 @@ for my $i (0..$#genomes){
 $pm->wait_all_children;
 
 
-#--- Subroutines ---#
-sub write_header{
-  my ($output) = @_;
-
-  unlink $output or die $! if -e $output;
-  open OUT, ">$output" or die $!;
-  print OUT join("\t", qw/genome scaffold read read_GC read_buoyant_density read_start read_length
-		    fragment_GC fragment_buoyant_density fragment_start fragment_length/), "\n";
-  close OUT;
-}
