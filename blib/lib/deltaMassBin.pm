@@ -56,7 +56,7 @@ sub load_deltaGC_table{
     
     #header
     if($.==1){ 
-      print join("\t", $_, qw/bin_min bin_max amp_count frag_count median median_rank/), "\n";
+      print join("\t", $_, qw/bin_min bin_max read_count frag_count median median_rank/), "\n";
       next; 
     }
     
