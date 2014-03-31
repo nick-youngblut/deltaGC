@@ -151,7 +151,6 @@ sub calc_frag_GC_window{
   my ($genome, $reads_r, $genome_seq, $frag_size, $window, $jump) = @_;
 
   # getting genome seq
- # my $genome_seq = $genome_db->seq($genome);
   my $genome_len = length $genome_seq;
 
   my %gc;
@@ -176,9 +175,16 @@ sub calc_frag_GC_window{
     # sliding window GC analysis 
     my $frag_len = length $frag_seq;
     for (my $i=0; $i<=($frag_len - 1); $i+=$jump) {	
-      $gc{$genome}{$read}{$i}{pos} = $i + $frag_start;
-      $gc{$genome}{$read}{$i}{GC} = calc_GC( substr($frag_seq, $i, $window) );
-      $gc{$genome}{$read}{$i}{density} = ($gc{$genome}{$read}{$i}{GC} * 0.098 / 100) + 1.660;
+      my $mid = int($i + $window/2);
+      # GC
+      my $frag_sub_seq = substr($frag_seq, $i, $window);
+      $gc{$genome}{$read}{$mid}{GC} = length($frag_sub_seq) >= $window ?
+	calc_GC( $frag_sub_seq ) : next;
+      
+      # position & buoyant_density
+      $gc{$genome}{$read}{$mid}{pos} = $i + $frag_start + $mid;
+      $gc{$genome}{$read}{$mid}{density} = $gc{$genome}{$read}{$mid}{GC} =~ /^[\d.]+$/ ?
+	($gc{$genome}{$read}{$mid}{GC} * 0.098 / 100) + 1.660 : 'NA';
     }
   }
  # print Dumper %gc; exit;

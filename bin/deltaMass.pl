@@ -130,7 +130,7 @@ threads.default: 0
 
 =item -i[ndex]
 
-For the genome and read database files (*.index) to be rebuilt 
+Force the genome and read database files (*.index) to be rebuilt 
 (saves time if not rebuilt)? [TRUE]
 
 =item --debug [<log_level>]

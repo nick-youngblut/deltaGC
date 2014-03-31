@@ -176,6 +176,12 @@ sub get_frag_GC{
       }
     }
     else{ confess "ERROR: do not recognize size distribution\n"; }
+
+    ### sanity check: frag_size > amp_len
+    if($amp_len > $frag_size){
+      warn "WARNING for $genome -> $Uid: read_len:$amp_len > fragment_length:$frag_size. Skipping!\n";
+      next;
+    }	
     
     # determine fragment start-end based on amplicon start-end
     ## amplicon center postion
