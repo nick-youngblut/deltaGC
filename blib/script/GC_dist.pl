@@ -46,15 +46,19 @@ Amplicon reads instead of shotgun metagenome reads? [FALSE]
 
 =item -s[ize] <frag_size>
 
-Fragment size (bp) around the read.
+Fragment size (bp) around the read (total length assessed).
+
+Default: frag_size.default
 
 =for Euclid:
 frag_size.type: int >0
-frag_size.default: 10000
+frag_size.default: 20000
 
 =item -w[indow] <window_size>
 
 Size (bp) of sliding window around read.
+
+Default: window_size.default
 
 =for Euclid:
 window_size.type: int > 0
@@ -63,6 +67,8 @@ window_size.default: 500
 =item -j[ump] <jump_size>
 
 Size (bp) for sliding window jump around read.
+
+Default: jump_size.default
 
 =for Euclid:
 jump_size.type: int >0
@@ -90,7 +96,8 @@ threads.default: 1
 
 =item -i[ndex]
 
-Force the genome & read database files (*.index) to be rebuilt? [TRUE]
+Force the genome & read database files (*.index) to be rebuilt 
+(not needed if database exists)? [TRUE]
 
 =item --debug [<log_level>]
 
@@ -124,6 +131,9 @@ each read produced by grinder.
 This is an exploratory program to 
 help understand values produced by deltaMass.
 
+Postion is given by the midpoint of the window.
+Edge cases are skipped.
+
 The output table can be easily plotted in R
 using ggplot.
 
@@ -131,7 +141,7 @@ using ggplot.
 
 Delete the genome and read DB file (*index files)
 if the script is killed before the DB construction
-is completed.
+is completed, otherwise a partial database will be used.
 
 =head1 EXAMPLES
 
@@ -184,7 +194,11 @@ if( $ARGV{-c_genomes} ){
 }
 
 ## make genome database
-print STDERR "Making genome database...\n" unless $ARGV{'--quiet'};
+unless($ARGV{'--quiet'}){
+  $ARGV{'-index'} ? print STDERR "Making genome database...\n" :
+    print STDERR "Loading genome database...\n";
+}
+
 my $genome_db = Bio::DB::Fasta->new($ARGV{-genomes}, -reindex=>$ARGV{'-index'});
 $mu->record('Genome db created') if $ARGV{'--debug'};
 
@@ -222,7 +236,13 @@ $mu->dump() if $ARGV{'--debug'};
 
 ## parsing genome fragments & calculating sliding window GC values
 my $pm = Parallel::ForkManager->new($ARGV{-threads});
-
+$pm->run_on_finish(
+    sub {
+      my ($pid, $exit_code, $ident, $exit_signal,
+          $core_dump, $ret_r) = @_;
+      write_output(@$ret_r); 
+    }
+  );
 
 ### forking 
 print STDERR "Calculating GC content by window...\n";
@@ -236,15 +256,12 @@ foreach my $genome (keys %reads){
   ## gc by window
   my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db->seq($genome), 
 				 $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
-  ## output
-  write_output($gc_r, $genome_db->header($genome));
 
-  $pm->finish();
+  $pm->finish( 0,[$gc_r, $genome_db->header($genome)] );
 }
 $pm->wait_all_children;
 
 # debug
 $mu->record('All children completed') if $ARGV{'--debug'};
 $mu->dump() if $ARGV{'--debug'};
-
 

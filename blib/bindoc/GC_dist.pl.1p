@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GC_DIST 1"
-.TH GC_DIST 1 "2014-03-27" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH GC_DIST 1 "2014-03-31" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -154,13 +154,19 @@ Fasta file of genomes used as '\-reference_file' in grinder
 Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
 .IP "\-s[ize] <frag_size>" 4
 .IX Item "-s[ize] <frag_size>"
-Fragment size (bp) around the read.
+Fragment size (bp) around the read (total length assessed).
+.Sp
+Default: frag_size.default
 .IP "\-w[indow] <window_size>" 4
 .IX Item "-w[indow] <window_size>"
 Size (bp) of sliding window around read.
+.Sp
+Default: window_size.default
 .IP "\-j[ump] <jump_size>" 4
 .IX Item "-j[ump] <jump_size>"
 Size (bp) for sliding window jump around read.
+.Sp
+Default: jump_size.default
 .IP "\-c_g[enomes]" 4
 .IX Item "-c_g[enomes]"
 Write out new version of the genome fasta file where all sequence
@@ -176,7 +182,8 @@ Number of threads to use for \s-1GC\s0 calculations.
 Default: threads.default
 .IP "\-i[ndex]" 4
 .IX Item "-i[ndex]"
-Force the genome & read database files (*.index) to be rebuilt? [\s-1TRUE\s0]
+Force the genome & read database files (*.index) to be rebuilt 
+(not needed if database exists)? [\s-1TRUE\s0]
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,
@@ -202,13 +209,16 @@ each read produced by grinder.
 This is an exploratory program to 
 help understand values produced by deltaMass.
 .PP
+Postion is given by the midpoint of the window.
+Edge cases are skipped.
+.PP
 The output table can be easily plotted in R
 using ggplot.
 .SS "\s-1WARNINGS\s0"
 .IX Subsection "WARNINGS"
 Delete the genome and read \s-1DB\s0 file (*index files)
 if the script is killed before the \s-1DB\s0 construction
-is completed.
+is completed, otherwise a partial database will be used.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SH "AUTHOR"

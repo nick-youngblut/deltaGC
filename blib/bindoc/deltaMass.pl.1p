@@ -196,7 +196,7 @@ Number of genomes to process in parallel.
 Default: threads.default
 .IP "\-i[ndex]" 4
 .IX Item "-i[ndex]"
-For the genome and read database files (*.index) to be rebuilt 
+Force the genome and read database files (*.index) to be rebuilt 
 (saves time if not rebuilt)? [\s-1TRUE\s0]
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
