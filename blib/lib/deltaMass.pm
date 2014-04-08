@@ -32,12 +32,15 @@ use Carp qw/ confess carp /;
 use Data::Dumper;
 use Text::ParseWords;
 use Bio::SeqIO;
+use Math::Gauss ':all';
+use Math::Random::SkewNormal qw/generate_sn/;
 use Math::Random qw/
 random_uniform_integer
 random_uniform
 random_normal
 random_exponential
-random_poisson/;
+random_poisson
+random_f/;
 
 
 =head2 correct_fasta
@@ -115,7 +118,9 @@ sub get_frag_GC{
       $amp_b,
       $size_dist, 
       $frag_min, $frag_max, 
-      $mean, $stdev, $mu,
+      $mean, $stdev, 
+      $skewness, $mu,
+      $DFn, $DFd,
       $primer_buffer) = @_;
 
   # sanity checks
@@ -153,7 +158,20 @@ sub get_frag_GC{
 	$time_out++;
 	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
 	  if $time_out > 9999;
+	#$frag_size = int random_normal(1, $mean, $stdev);
 	$frag_size = int random_normal(1, $mean, $stdev);
+	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+      }
+    }
+    elsif($size_dist eq 'skewed-normal'){
+      while(1){
+	$time_out++;
+	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	  if $time_out > 9999;
+	my $sk = generate_sn($skewness);    
+	next if $sk == 0;
+	$frag_size = $sk >= 0 ? $mean + ($frag_max-$mean) * sqrt($sk) : 
+	  $mean - ($frag_max-$mean) * sqrt(abs($sk));
 	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
       }
     }
@@ -172,6 +190,19 @@ sub get_frag_GC{
 	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
 	  if $time_out > 9999;
 	$frag_size = int random_poisson(1, $mu);
+	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
+      }
+    }
+    elsif($size_dist eq 'f'){
+      while(1){
+	$time_out++;
+	die "ERROR for genome $genome: could not get sequence in length range within $time_out attempts\n"
+	  if $time_out > 9999;
+	$frag_size = random_f(1, $DFn, $DFd);  # scaling by 5; values >5 will be excluded
+	$frag_size = $frag_size == 0 ? 0 : $frag_size / 5;
+	$frag_size = $frag_size <= 1 ? 1 - $frag_size : next;
+	$frag_size = int($frag_size * ($frag_max - $frag_min));
+	$frag_size = $frag_min if $frag_size == 0;
 	last if $frag_size >= $frag_min && $frag_size <= $frag_max;
       }
     }
@@ -260,6 +291,32 @@ sub get_frag_GC{
 
   return \@ret;
 }
+
+
+=head1 skew
+
+Skewing values from a normal distribution
+
+=head2 Input
+
+x (value), e (location), w (scale), a (alpha)
+
+=head2 Output 
+
+value
+
+=cut
+
+sub skew{
+  my ($x, # value (from a normal distribution)
+      $e, # location
+      $w, # scale
+      $a  # skewness
+     ) = @_;
+  my $t = ($x - $e) / $w;
+  return 2 / $w * pdf($t) * cdf($a * $t);
+}
+
 
 
 =head write_read_info

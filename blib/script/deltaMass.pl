@@ -52,8 +52,8 @@ Options: 'uniform','normal','exponential', 'poisson'
 Default: size_dist.default
 
 =for Euclid:
-size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential' || size_dist eq 'poisson'
-size_dist.type.error: <size_dist> must be 'exponential', 'uniform', 'normal', or 'poisson'
+size_dist.type: string, size_dist eq 'uniform' || size_dist eq 'normal' || size_dist eq 'exponential' || size_dist eq 'poisson' || size_dist eq 'f' || size_dist eq 'skewed-normal'
+size_dist.type.error: <size_dist> must be 'exponential', 'uniform', 'normal', 'skewed-normal', 'poisson', or 'f'
 size_dist.default: 'exponential'
 
 =item -range <min_length>-<max_length>
@@ -88,6 +88,16 @@ Default: stdev.default
 stdev.type: int >=0
 stdev.default: 100
 
+=item -skew[ness] <skewness>
+
+Skewness of the normal distribution (negative values = left-skew)
+
+Default: skewness.default
+
+=for Euclid:
+skewness.type: num
+skewness.default: 0.75
+
 =item -mu <mu>
 
 mu parameter for poisson distribution.
@@ -97,6 +107,18 @@ Default: mu.default
 =for Euclid:
 mu.type: num > 0
 mu.default: 1
+
+=item -df <DFn> <DFd>
+
+Numerator and denominator for the degrees of freedom in the F-distribution.
+
+Default: DFn.default DFd.default
+
+=for Euclid:
+DFn.type: int > 0
+DFn.default: 10
+DFd.type: int > 0
+DFd.default: 100
 
 =item -p[rimer_buffer] <primer_buffer>
 
@@ -159,7 +181,17 @@ Print the usual program information
 
 =head1 DESCRIPTION
 
-The rest of the documentation
+Simulate the DNA fragments containing the read 
+(amplicon or shotgun) of interest and calculate
+the GC content of the fragment & also the predicted
+buoyant density of the fragment (assuming equilibrium
+has been reached). 
+
+=head2 Notes on size distributions
+
+The f-distribution is scaled by 5 to be 0-1, which is
+inverted (1-x) and multiplied by difference in range values
+(max-min fragment length).
 
 =head1 EXAMPLES
 
@@ -272,16 +304,22 @@ for my $i (0..$#genomes){
 
   $pm->start and next;
   # making random fragments & calculating GC
-  my $ret_r = get_frag_GC($genome, \@spec_ids,
-	      $genome_db, $read_db,	      
-	      $ARGV{-amplicon},
-	      $ARGV{-sd},
-	      $ARGV{-range}{min_length},
-	      $ARGV{-range}{max_length},
-	      $ARGV{-mean},
-	      $ARGV{-stdev},
-	      $ARGV{-mu},
-	      $ARGV{-primer_buffer});
+  my $ret_r = get_frag_GC($genome, 
+			  \@spec_ids,
+			  $genome_db, 
+			  $read_db,	      
+			  $ARGV{-amplicon},
+			  $ARGV{-sd},
+			  $ARGV{-range}{min_length},
+			  $ARGV{-range}{max_length},
+			  $ARGV{-mean},
+			  $ARGV{-stdev},
+			  $ARGV{-skewness},
+			  $ARGV{-mu},
+			  $ARGV{-df}{DFn},
+			  $ARGV{-df}{DFd},
+			  $ARGV{-primer_buffer}
+			 );
 
   $pm->finish(0, $ret_r);
 }

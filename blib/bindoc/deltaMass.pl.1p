@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAMASS 1"
-.TH DELTAMASS 1 "2014-03-31" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAMASS 1 "2014-04-03" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -171,11 +171,21 @@ Default: mean_length.default
 Fragment length standard deviation.
 .Sp
 Default: stdev.default
+.IP "\-skew[ness] <skewness>" 4
+.IX Item "-skew[ness] <skewness>"
+Skewness of the normal distribution (negative values = left-skew)
+.Sp
+Default: skewness.default
 .IP "\-mu <mu>" 4
 .IX Item "-mu <mu>"
 mu parameter for poisson distribution.
 .Sp
 Default: mu.default
+.IP "\-df <DFn> <DFd>" 4
+.IX Item "-df <DFn> <DFd>"
+Numerator and denominator for the degrees of freedom in the F\-distribution.
+.Sp
+Default: DFn.default DFd.default
 .IP "\-p[rimer_buffer] <primer_buffer>" 4
 .IX Item "-p[rimer_buffer] <primer_buffer>"
 Fragment must contain this many bp before & after the 'amplicon' (specified by grinder).
@@ -217,7 +227,16 @@ then it is log_level.opt_default.
 Print the usual program information
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-The rest of the documentation
+Simulate the \s-1DNA\s0 fragments containing the read 
+(amplicon or shotgun) of interest and calculate
+the \s-1GC\s0 content of the fragment & also the predicted
+buoyant density of the fragment (assuming equilibrium
+has been reached).
+.SS "Notes on size distributions"
+.IX Subsection "Notes on size distributions"
+The f\-distribution is scaled by 5 to be 0\-1, which is
+inverted (1\-x) and multiplied by difference in range values
+(max-min fragment length).
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SH "AUTHOR"
