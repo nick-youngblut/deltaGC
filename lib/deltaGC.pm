@@ -1,4 +1,4 @@
-package deltaMass;
+package deltaGC;
 
 use 5.006;
 use strict;
@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-deltaMass - scripts for running deltaMass.pl
+deltaGC - scripts for running deltaGC.pl
 
 =head1 VERSION
 
@@ -485,8 +485,8 @@ Nick Youngblut, C<< <ndy2 at cornell.edu> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-deltaMass at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaMass>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-deltaGC at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaGC>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -496,7 +496,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc deltaMass
+    perldoc deltaGC
 
 
 You can also look for information at:
@@ -505,19 +505,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaMass>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaGC>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/deltaMass>
+L<http://annocpan.org/dist/deltaGC>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/deltaMass>
+L<http://cpanratings.perl.org/d/deltaGC>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/deltaMass/>
+L<http://search.cpan.org/dist/deltaGC/>
 
 =back
 
@@ -538,4 +538,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of deltaMass
+1; # End of deltaGC

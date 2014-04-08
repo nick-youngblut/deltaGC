@@ -158,7 +158,7 @@ my %res;
 get_ssu_GC($seq_in, \%res, $ssu_start, $ssu_end);
 
 # get GC of fragment
-my $genome = deltaMass::load_fasta($genome_in);
+my $genome = deltaGC::load_fasta($genome_in);
 get_fragment_GC($genome, \%res, $frag_size);
 
 # write output table

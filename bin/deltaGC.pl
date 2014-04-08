@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-deltaMass.pl -- basic description here
+deltaGC.pl -- basic description here
 
 =head1 VERSION
 
@@ -14,7 +14,7 @@ This is version 0.0.1
 
 =head1 USAGE
 
-deltaMass.pl [options] -reads -genomes
+deltaGC.pl [options] -reads -genomes
 
 =head1 REQUIRED ARGUMENTS
 
@@ -217,7 +217,7 @@ use Bio::DB::Fasta;
 use Parallel::ForkManager;
 use Term::ProgressBar;
 use GC_dist qw/correct_fasta/;
-use deltaMass qw/
+use deltaGC qw/
 get_frag_GC
 get_genome_GC_stats
 get_total_GC_stats

@@ -1,4 +1,4 @@
-package deltaMassBin;
+package deltaGCBin;
 
 use 5.006;
 use strict;
@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-deltaMassBin - scripts for running deltaMassBin.pl
+deltaGCBin - scripts for running deltaGCBin.pl
 
 =head1 VERSION
 
@@ -33,7 +33,7 @@ use Data::Dumper;
 
 =head2 load_deltaGC_table
 
-Loading deltaGC table produced by deltaMass.
+Loading deltaGC table produced by deltaGC.
 Loading by genome [column 1]
 
 =cut
@@ -163,8 +163,8 @@ Nick Youngblut, C<< <ndy2 at cornell.edu> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-deltaMassBin at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaMassBin>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-deltaGCBin at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=deltaGCBin>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -174,7 +174,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc deltaMassBin
+    perldoc deltaGCBin
 
 
 You can also look for information at:
@@ -183,19 +183,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaMassBin>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=deltaGCBin>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/deltaMassBin>
+L<http://annocpan.org/dist/deltaGCBin>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/deltaMassBin>
+L<http://cpanratings.perl.org/d/deltaGCBin>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/deltaMassBin/>
+L<http://search.cpan.org/dist/deltaGCBin/>
 
 =back
 
@@ -216,4 +216,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of deltaMassBin
+1; # End of deltaGCBin

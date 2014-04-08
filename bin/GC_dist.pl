@@ -129,7 +129,7 @@ Determine how GC is distributed around
 each read produced by grinder.
 
 This is an exploratory program to 
-help understand values produced by deltaMass.
+help understand values produced by deltaGC.
 
 Postion is given by the midpoint of the window.
 Edge cases are skipped.

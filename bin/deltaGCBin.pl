@@ -22,7 +22,7 @@ This is version 0.0.1
 
 =item <filename>
 
-tab-delimited file produced by deltaMass.pl. ('-' if from STDIN)
+tab-delimited file produced by deltaGC.pl. ('-' if from STDIN)
 
 =back
 
@@ -76,7 +76,7 @@ Print the usual program information
 
 =head1 DESCRIPTION
 
-Bin data produced by deltaMass.pl in terms of
+Bin data produced by deltaGC.pl in terms of
 read(amplicon)_buoyant_density & fragment_buoyant_density. 
 This makes it easier to produce a heatmap
 of buoyant densities with ggplot.
@@ -106,7 +106,7 @@ This software is licensed under the terms of the GPLv3
 #--- modules ---#
 use Data::Dumper;
 use Getopt::Euclid;
-use deltaMassBin qw/
+use deltaGCBin qw/
 load_deltaGC_table
 binByDensity
 calcMedianRank/;
