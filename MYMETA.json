@@ -1,5 +1,5 @@
 {
-   "abstract" : "scripts for running deltaMass.pl",
+   "abstract" : "scripts for running deltaGC.pl",
    "author" : [
       "Nick Youngblut <ndy2@cornell.edu>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "deltaMass",
+   "name" : "deltaGC",
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -26,8 +26,8 @@
       }
    },
    "provides" : {
-      "deltaMass" : {
-         "file" : "lib/deltaMass.pm",
+      "deltaGC" : {
+         "file" : "lib/deltaGC.pm",
          "version" : "0.01"
       }
    },

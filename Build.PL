@@ -10,17 +10,17 @@ my @binscripts = grep(/.pl$|.py$|.r$/i, @binfiles);
 @binscripts = map{$_ = "./bin/" . $_} @binscripts;
 
 my $builder = Module::Build->new(
-    module_name         => 'deltaMass',
+    module_name         => 'deltaGC',
     license             => 'perl',
     dist_author         => q{Nick Youngblut <ndy2@cornell.edu>},
-    dist_version_from   => 'lib/deltaMass.pm',
+    dist_version_from   => 'lib/deltaGC.pm',
     build_requires => {
         'Test::More' => 0,
     },
     requires => {
         'perl' => 5.006,
     },
-    add_to_cleanup      => [ 'deltaMass-*' ],
+    add_to_cleanup      => [ 'deltaGC-*' ],
     create_makefile_pl => 'traditional',
     script_files => \@binscripts			   
 );
