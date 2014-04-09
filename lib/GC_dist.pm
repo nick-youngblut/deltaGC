@@ -118,16 +118,18 @@ push @EXPORT_OK, 'calc_GC';
 
 sub calc_GC {
 # calculting GC of a sequence
-  my ($seq) = shift;
+  my ($seq, $gap_frac) = @_;
 
-  confess "ERROR: no sequences provided for calculating GC!\n" 
+  confess "ERROR: no sequences provided for calculating GC!\n"
     unless defined $seq;
 
-  # removing gaps #
-  $seq =~ s/[-.]//g;
-
   # length
+  my $raw_len = length $seq;
+
+  # removing gaps & 'N' #
+  $seq =~ s/[^ATCG]//gi;
   my $len = length $seq;
+  return 'NA' if 1 - $len / $raw_len > $gap_frac; # if DNA is just gaps or N's
 
   # GC
   my $GC_sum = 0;
@@ -148,7 +150,9 @@ calculating GC over a window for the read
 push @EXPORT_OK, 'calc_frag_GC_window';
 
 sub calc_frag_GC_window{
-  my ($genome, $reads_r, $genome_seq, $frag_size, $window, $jump) = @_;
+  my ($genome, $reads_r, $genome_seq, 
+      $frag_size, $window, $jump,
+      $gap_frac) = @_;
 
   # getting genome seq
   my $genome_len = length $genome_seq;
@@ -179,7 +183,7 @@ sub calc_frag_GC_window{
       # GC
       my $frag_sub_seq = substr($frag_seq, $i, $window);
       $gc{$genome}{$read}{$mid}{GC} = length($frag_sub_seq) >= $window ?
-	calc_GC( $frag_sub_seq ) : next;
+	calc_GC( $frag_sub_seq, $gap_frac ) : next;   # GC_content may be 'NA'
       
       # position & buoyant_density
       $gc{$genome}{$read}{$mid}{pos} = $i + $frag_start + $mid;
