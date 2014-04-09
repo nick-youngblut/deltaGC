@@ -67,22 +67,30 @@ sub correct_fasta{
 
 =head2 calc_GC
 
+Calculating GC content for a string (DNA)
+
+=head3 IN
+
+1) dna_string 2) fraction of string length that are gaps (not [ATGC]i)
+
 =cut
 
 push @EXPORT_OK, 'calc_GC';
 
 sub calc_GC {
 # calculting GC of a sequence
-  my ($seq) = @_;
+  my ($seq, $gap_frac) = @_;
 
   confess "ERROR: no sequences provided for calculating GC!\n" 
     unless defined $seq;
 
-  # removing gaps #
-  $seq =~ s/[-.]//g;
-
   # length
+  my $raw_len = length $seq;
+
+  # removing gaps & 'N' #
+  $seq =~ s/[^ATCG]//gi;
   my $len = length $seq;
+  return ('NA',$len) if 1 - $len / $raw_len > $gap_frac; # if DNA is just gaps or N's
 
   # GC
   my $GC_sum = 0;
@@ -121,7 +129,8 @@ sub get_frag_GC{
       $mean, $stdev, 
       $skewness, $mu,
       $DFn, $DFd,
-      $primer_buffer) = @_;
+      $primer_buffer,
+      $gap_frac) = @_;
 
   # sanity checks
   ## values provided
@@ -264,16 +273,18 @@ sub get_frag_GC{
     }
 
     # calculating fragment GC
-    my ($frag_GC, $frag_length) = calc_GC( $frag_seq );
+    my ($frag_GC, $frag_length) = calc_GC( $frag_seq, $gap_frac );
 
-    # calculating fragment buoyant density
-    my $frag_dens = ($frag_GC * 0.098 / 100) + 1.660;
+    # calculating fragment buoyant density    
+    my $frag_dens = $frag_GC =~ /^[\d.]+$/ ?
+      ($frag_GC * 0.098 / 100) + 1.660 : 'NA';
 
     # calculating amplicon GC
-    my ($amp_GC, $amp_length) = calc_GC($seqo->seq);
+    my ($amp_GC, $amp_length) = calc_GC($seqo->seq, $gap_frac);
 
     # calculating amplicon buoyant density
-    my $amp_dens = ($amp_GC * 0.098 / 100) + 1.660;
+    my $amp_dens = $amp_GC =~ /^[\d.]+$/ ?
+      ($amp_GC * 0.098 / 100) + 1.660 : 'NA';
 
     # writing output
     push @ret, [$genome_db->header($genome),

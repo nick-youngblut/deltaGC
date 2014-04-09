@@ -74,6 +74,17 @@ Default: jump_size.default
 jump_size.type: int >0
 jump_size.default: 100
 
+=item -gap[_fraction] <gap_frac>
+
+Fraction of DNA segment that can be composed of gaps (any character besides [ATGCatgc]).
+'NA' if cutoff not met.
+
+Default: gap_frac.default
+
+=for Euclid:
+gap_frac.type: num >= 0
+gap_frac.default: 0.05
+
 =item -c_g[enomes]
 
 Write out new version of the genome fasta file where all sequence
@@ -165,7 +176,6 @@ This software is licensed under the terms of the GPLv3
 use Data::Dumper;
 use Getopt::Euclid;
 use Bio::DB::Fasta;
-use GC_dist qw/calc_GC/;
 use List::MoreUtils qw/each_array/;
 use Parallel::ForkManager;
 use Text::ParseWords;
@@ -176,6 +186,7 @@ correct_fasta
 calc_frag_GC_window 
 parse_desc
 write_output/;
+
 
 #--- I/O error ---#
 if(defined $ARGV{'-index'}){  $ARGV{'-index'} = 0; }
@@ -255,7 +266,8 @@ foreach my $genome (keys %reads){
 
   ## gc by window
   my $gc_r = calc_frag_GC_window($genome, $reads{$genome}, $genome_db->seq($genome), 
-				 $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'} );
+				 $ARGV{'-size'}, $ARGV{'-window'}, $ARGV{'-jump'},
+				 $ARGV{'-gap_fraction'});
 
   $pm->finish( 0,[$gc_r, $genome_db->header($genome)] );
 }

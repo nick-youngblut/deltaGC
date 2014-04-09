@@ -98,14 +98,17 @@ sub binByDensity{
 	}
 
 	# adding to bin
+	## skiping if 'NA' value
 	## amplicon
-	if( $amp_dens >= $bin->[0] && 
+	if( $amp_dens =~ /^[\d.]+$/ and
+	    $amp_dens >= $bin->[0] and 
 	    $amp_dens < $bin->[1]){
 	  $bins{$genome}{$bin->[2]}{amp_count}++;
 	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
 	}
 	## fragment
-	if( $frag_dens >= $bin->[0] && 
+	if( $frag_dens =~ /^[\d.]+$/ and  
+	    $frag_dens >= $bin->[0] and 
 	    $frag_dens < $bin->[1]){
 	  $bins{$genome}{$bin->[2]}{frag_count}++;
 	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};

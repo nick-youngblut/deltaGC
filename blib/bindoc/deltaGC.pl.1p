@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAGC 1"
-.TH DELTAGC 1 "2014-04-08" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAGC 1 "2014-04-09" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -191,6 +191,12 @@ Default: DFn.default DFd.default
 Fragment must contain this many bp before & after the 'amplicon' (specified by grinder).
 .Sp
 Default: primer_buffer.default
+.IP "\-gap[_fraction] <gap_frac>" 4
+.IX Item "-gap[_fraction] <gap_frac>"
+Fraction of \s-1DNA\s0 segment that can be composed of gaps (any character besides [ATGCatgc]). 
+\&'\s-1NA\s0' if cutoff not met.
+.Sp
+Default: gap_frac.default
 .IP "\-c_g[enomes]" 4
 .IX Item "-c_g[enomes]"
 Write out new version of the genome fasta file where all sequence

@@ -130,6 +130,17 @@ Default: primer_buffer.default
 primer_buffer.type: int >=0
 primer_buffer.default: 70
 
+=item -gap[_fraction] <gap_frac>
+
+Fraction of DNA segment that can be composed of gaps (any character besides [ATGCatgc]). 
+'NA' if cutoff not met.
+
+Default: gap_frac.default
+
+=for Euclid:
+gap_frac.type: num >= 0
+gap_frac.default: 0.05
+
 =item -c_g[enomes]
 
 Write out new version of the genome fasta file where all sequence
@@ -318,7 +329,8 @@ for my $i (0..$#genomes){
 			  $ARGV{-mu},
 			  $ARGV{-df}{DFn},
 			  $ARGV{-df}{DFd},
-			  $ARGV{-primer_buffer}
+			  $ARGV{-primer_buffer},
+			  $ARGV{-gap_fraction}
 			 );
 
   $pm->finish(0, $ret_r);
