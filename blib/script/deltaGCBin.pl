@@ -30,7 +30,7 @@ tab-delimited file produced by deltaGC.pl. ('-' if from STDIN)
 
 =over
 
-=item -b[inwidth] <binwidth>
+=item -b[[in][width]] <binwidth>
 
 fragment_buoyant_density binwidth.
 

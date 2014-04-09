@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAGCBIN 1"
-.TH DELTAGCBIN 1 "2014-04-08" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAGCBIN 1 "2014-04-09" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -146,8 +146,8 @@ This is version 0.0.1
 tab-delimited file produced by deltaGC.pl. ('\-' if from \s-1STDIN\s0)
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-.IP "\-b[inwidth] <binwidth>" 4
-.IX Item "-b[inwidth] <binwidth>"
+.IP "\-b[[in][width]] <binwidth>" 4
+.IX Item "-b[[in][width]] <binwidth>"
 fragment_buoyant_density binwidth.
 .Sp
 Default: binwidth.default
