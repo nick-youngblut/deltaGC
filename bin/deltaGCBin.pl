@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-template.pl -- basic description here
+deltaGCBin.pl -- Binning buoyant densities calucated from deltaGC.pl
 
 =head1 VERSION
 
@@ -14,7 +14,7 @@ This is version 0.0.1
 
 =head1 USAGE
 
-    template.pl [options]
+    deltaGCBin.pl [options]
 
 =head1 REQUIRED ARGUMENTS
 

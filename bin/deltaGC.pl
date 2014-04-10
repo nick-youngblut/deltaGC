@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-deltaGC.pl -- basic description here
+deltaGC.pl -- Simulate template fragments and calculated GC & buoyant density
 
 =head1 VERSION
 

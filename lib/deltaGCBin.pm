@@ -30,6 +30,7 @@ use base 'Exporter';
 our @EXPORT_OK = '';
 use Carp qw/ confess carp /;
 use Data::Dumper;
+use Regexp::Common;
 
 =head2 load_deltaGC_table
 
@@ -89,6 +90,13 @@ sub binByDensity{
     foreach  my $Uid (keys %{$tbl_r->{$genome}}){
       my $amp_dens = ${$tbl_r->{$genome}{$Uid}}[3];
       my $frag_dens = ${$tbl_r->{$genome}{$Uid}}[7];
+
+      ## skiping if 'NA' value
+      warn "$genome -> $Uid has '$amp_dens' for amplicon buoyant density"
+	unless $amp_dens =~ /^[\d.]+$/;
+      warn "$genome -> $Uid has '$frag_dens' for fragment buoyant density"
+	unless $frag_dens =~ /^[\d.]+$/;
+
       foreach my $bin (@$binRanges_r){
 	# intializing bin
 	unless(exists $bins{$genome}{$bin->[2]}){ # bin by 
@@ -98,12 +106,6 @@ sub binByDensity{
 	}
 
 	# adding to bin
-	## skiping if 'NA' value
-	warn "$genome -> $Uid has '$amp_dens' for amplicon buoyant density"
-	  unless $amp_dens =~ /^[\d.]+$/;
-	warn "$genome -> $Uid has '$frag_dens' for fragment buoyant density"
-	  unless $frag_dens =~ /^[\d.]+$/;
-
 	## amplicon
 	if( $amp_dens =~ /^[\d.]+$/ and
 	    $amp_dens >= $bin->[0] and 
@@ -146,6 +148,7 @@ sub calcMedianRank{
     my $stat = Statistics::Descriptive::Full->new();
 
     foreach my $Uid(keys %{$tbl_r->{$genome}}){
+      next unless ${$tbl_r->{$genome}{$Uid}}[7] =~ /$RE{num}{real}/;  # skipping 'NA' values
       $stat->add_data(${$tbl_r->{$genome}{$Uid}}[7]); # adding density values
     }
     $medians{$genome}{median} = $stat->median();

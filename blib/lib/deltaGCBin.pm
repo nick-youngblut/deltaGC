@@ -99,6 +99,11 @@ sub binByDensity{
 
 	# adding to bin
 	## skiping if 'NA' value
+	warn "$genome -> $Uid has '$amp_dens' for amplicon buoyant density"
+	  unless $amp_dens =~ /^[\d.]+$/;
+	warn "$genome -> $Uid has '$frag_dens' for fragment buoyant density"
+	  unless $frag_dens =~ /^[\d.]+$/;
+
 	## amplicon
 	if( $amp_dens =~ /^[\d.]+$/ and
 	    $amp_dens >= $bin->[0] and 
