@@ -124,13 +124,13 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAGC 1"
-.TH DELTAGC 1 "2014-04-09" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAGC 1 "2014-04-10" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-deltaGC.pl \-\- basic description here
+deltaGC.pl \-\- Simulate template fragments and calculated GC & buoyant density
 .SH "VERSION"
 .IX Header "VERSION"
 This is version 0.0.1
