@@ -126,16 +126,34 @@ sub calc_GC {
   # length
   my $raw_len = length $seq;
 
-  # removing gaps & 'N' #
-  $seq =~ s/[^ATCG]//gi;
+  # removing gaps
+  $seq =~ s/-+//g;
   my $len = length $seq;
-  return 'NA' if 1 - $len / $raw_len > $gap_frac; # if DNA is just gaps or N's
+  return ('NA',$len) if 1 - $len / $raw_len > $gap_frac; # if too many gaps in DNA
+
+  # upcase
+  $seq =~ tr/a-z/A-Z/;
+
+  # scoring table (included ambiguous nucleotides)
+  my %score = (G => 1,
+               C => 1,
+               R => 0.5,
+               Y => 0.5,
+               S => 1,
+               K => 0.5,
+               M => 0.5,
+               B => 0.66,
+               D => 0.33,
+               H => 0.33,
+               V => 0.66,
+               N => 0.5
+               );
 
   # GC
+  my $q = join("", "[", keys %score, "]");
+  $q = qr/$q/;
   my $GC_sum = 0;
-  while( $seq =~ /[GC]/gi ){
-    $GC_sum++;
-  }
+  $GC_sum += $score{$1} while $seq =~ /($q)/g;
   my $GC_content = $GC_sum / $len * 100;
 
   return $GC_content;
