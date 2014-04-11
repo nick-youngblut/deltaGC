@@ -132,8 +132,8 @@ primer_buffer.default: 70
 
 =item -gap[_fraction] <gap_frac>
 
-Fraction of DNA segment that can be composed of gaps (any character besides [ATGCatgc]). 
-'NA' if cutoff not met.
+Fraction of DNA segment that can be composed of gaps ('-').
+GC_content = 'NA' if cutoff not met.
 
 Default: gap_frac.default
 
@@ -198,11 +198,24 @@ the GC content of the fragment & also the predicted
 buoyant density of the fragment (assuming equilibrium
 has been reached). 
 
+Ambiguous IUPAC nucleotide codes will be included
+in GC calculations based the the fraction of 'G' & 'C'
+in the ambiguous character. See 'Warnings' about 'N'characters.
+
 =head2 Notes on size distributions
 
 The f-distribution is scaled by 5 to be 0-1, which is
 inverted (1-x) and multiplied by difference in range values
 (max-min fragment length).
+
+=head2 Warnings
+
+If 'N' characters signify gaps, remove them from the
+genome/read fasta files!
+
+Delete the genome and read DB file (*index files)
+if the script is killed before the DB construction
+is completed, otherwise a partial database will be used.
 
 =head1 EXAMPLES
 

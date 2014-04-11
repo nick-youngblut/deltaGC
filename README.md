@@ -46,12 +46,12 @@ To install this module, run the following commands:
 
 ##SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for each script (<script>) by
+After installing, you can find documentation for each script by
 typing: 
 
-	<script> --man
-
-	perldoc <script>
+	SCRIPT.pl --man
+	   OR
+	perldoc SCRIPT.pl
 
 
 ##LICENSE AND COPYRIGHT

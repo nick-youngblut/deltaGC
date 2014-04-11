@@ -76,8 +76,8 @@ jump_size.default: 100
 
 =item -gap[_fraction] <gap_frac>
 
-Fraction of DNA segment that can be composed of gaps (any character besides [ATGCatgc]).
-'NA' if cutoff not met.
+Fraction of DNA segment that can be composed of gaps ('-').
+GC_content = 'NA' if cutoff not met.
 
 Default: gap_frac.default
 
@@ -148,7 +148,14 @@ Edge cases are skipped.
 The output table can be easily plotted in R
 using ggplot.
 
-=head2 WARNINGS
+Ambiguous IUPAC nucleotide codes will be included
+in GC calculations based the the fraction of 'G' & 'C'
+in the ambiguous character. See 'Warnings' about 'N'characters.
+
+=head2 Warnings
+
+If 'N' characters signify gaps, remove them from the
+genome/read fasta files!
 
 Delete the genome and read DB file (*index files)
 if the script is killed before the DB construction
