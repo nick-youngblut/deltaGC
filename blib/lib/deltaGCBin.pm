@@ -83,46 +83,44 @@ making a hash of bins foreach amplicon & fragment buoyant density
 push @EXPORT_OK, 'binByDensity';
 
 sub binByDensity{
-  my ($tbl_r, $binRanges_r) = @_;
+  my ($tbl_r, $genome, $binRanges_r) = @_;
 
   my %bins;
-  foreach my $genome (keys %$tbl_r){
-    foreach  my $Uid (keys %{$tbl_r->{$genome}}){
-      my $amp_dens = ${$tbl_r->{$genome}{$Uid}}[3];
-      my $frag_dens = ${$tbl_r->{$genome}{$Uid}}[7];
-
-      ## skiping if 'NA' value
-      warn "$genome -> $Uid has '$amp_dens' for amplicon buoyant density"
-	unless $amp_dens =~ /^[\d.]+$/;
-      warn "$genome -> $Uid has '$frag_dens' for fragment buoyant density"
-	unless $frag_dens =~ /^[\d.]+$/;
-
-      foreach my $bin (@$binRanges_r){
-	# intializing bin
-	unless(exists $bins{$genome}{$bin->[2]}){ # bin by 
-	  $bins{$genome}{$bin->[2]}{amp_count} = 0;
-	  $bins{$genome}{$bin->[2]}{frag_count} = 0;
-	  $bins{$genome}{$bin->[2]}{row} = [('NA') x 10];
-	}
-
-	# adding to bin
-	## amplicon
+#  foreach my $genome (keys %$tbl_r){
+  foreach  my $Uid (keys %$tbl_r){
+    my $amp_dens = ${$tbl_r->{$Uid}}[3];
+    my $frag_dens = ${$tbl_r->{$Uid}}[7];
+    
+    ## skiping if 'NA' value
+    warn "$genome -> $Uid has '$amp_dens' for amplicon buoyant density"
+      unless $amp_dens =~ /^[\d.]+$/;
+    warn "$genome -> $Uid has '$frag_dens' for fragment buoyant density"
+      unless $frag_dens =~ /^[\d.]+$/;
+    
+    foreach my $bin (@$binRanges_r){
+      # intializing bin
+      unless(exists $bins{$bin->[2]}){ # bin by 
+	$bins{$bin->[2]}{amp_count} = 0;
+	$bins{$bin->[2]}{frag_count} = 0;
+	  $bins{$bin->[2]}{row} = [('NA') x 10];
+      }
+      
+      # adding to bin
+      ## amplicon
 	if( $amp_dens =~ /$RE{num}{real}/ and
 	    $amp_dens >= $bin->[0] and 
 	    $amp_dens < $bin->[1]){
-	  $bins{$genome}{$bin->[2]}{amp_count}++;
-	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
+	  $bins{$bin->[2]}{amp_count}++;
+	  $bins{$bin->[2]}{row} = $tbl_r->{$Uid};
 	}
 	## fragment
-	if( $frag_dens =~ /$RE{num}{real}/ and  
-	    $frag_dens >= $bin->[0] and 
-	    $frag_dens < $bin->[1]){
-	  $bins{$genome}{$bin->[2]}{frag_count}++;
-	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
-	}
+      if( $frag_dens =~ /$RE{num}{real}/ and  
+	  $frag_dens >= $bin->[0] and 
+	  $frag_dens < $bin->[1]){
+	$bins{$bin->[2]}{frag_count}++;
+	  $bins{$bin->[2]}{row} = $tbl_r->{$Uid};
       }
     }
-    delete $tbl_r->{$genome};
   }
 
   #print Dumper %bins; exit;

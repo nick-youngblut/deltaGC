@@ -52,6 +52,16 @@ min.default: 1.660
 max.type: num >= 0
 max.default: 1.770
 
+=item -f[ork] <fork>
+
+Number of genomes to process in parallel (0 = no forking).
+
+Default: fork.default
+
+=for Euclid:
+fork.type: int >= 0
+fork.default: 0
+
 =item --debug [<log_level>]
 
 Set the log level. Default is log_level.default but if you provide --debug,
@@ -106,6 +116,7 @@ This software is licensed under the terms of the GPLv3
 #--- modules ---#
 use Data::Dumper;
 use Getopt::Euclid;
+use Parallel::ForkManager;
 use deltaGCBin qw/
 load_deltaGC_table
 binByDensity
@@ -125,27 +136,39 @@ my $stats_r = calcMedianRank($tbl_r);
 my $binRanges_r = makeBinRanges($ARGV{-binwidth}, 
 				$ARGV{-range}{min}, 
 				$ARGV{-range}{max});
-my $bins_r = binByDensity($tbl_r, $binRanges_r);
 
-# writing output
-foreach my $genome (keys %$bins_r){
-  # sanity check 
-  die "ERROR: cannot find median & rank for genome: $genome\n"
-    unless exists $stats_r->{$genome};
+# forking for binning
+my $pm = Parallel::ForkManager->new($ARGV{-fork});
+$pm->run_on_finish(
+   sub{
+     my $ret_r = pop;     
+     my ($genome, $bins_r) = @$ret_r;
 
-  # output by bin
-  foreach my $bin (keys %{$bins_r->{$genome}}){
-    print join("\t", 
-	       $genome, # genome_ID
-	       @{$bins_r->{$genome}{$bin}{row}}, # row values (random draw from bin)
-	       split (/-/, $bin), # bin range
-	       $bins_r->{$genome}{$bin}{amp_count}, # count in bin for amplicon
-	       $bins_r->{$genome}{$bin}{frag_count}, # count in bin for fragment
-	       $stats_r->{$genome}{median},     # median 
-	       $stats_r->{$genome}{rank}        # rank by median
-	       ), "\n";
-  }
+     # sanity check
+     die "ERROR: cannot find median & rank for genome: $genome\n"
+       unless exists $stats_r->{$genome};
+     # writing output
+     foreach my $bin (keys %$bins_r){
+       print join("\t", 
+		  $genome, # genome_ID
+		  @{$bins_r->{$bin}{row}}, # row values (random draw from bin)
+		  split (/-/, $bin), # bin range
+		  $bins_r->{$bin}{amp_count}, # count in bin for amplicon
+		  $bins_r->{$bin}{frag_count}, # count in bin for fragment
+		  $stats_r->{$genome}{median},     # median 
+		  $stats_r->{$genome}{rank}        # rank by median
+		 ), "\n";
+     }
+   }
+);
+
+
+foreach my $genome (keys %$tbl_r){  
+  $pm->start and next;
+  my $bins_r = binByDensity($tbl_r->{$genome}, $genome, $binRanges_r);
+  $pm->finish(0, [$genome, $bins_r]);
 }
+$pm->wait_all_children;
 
 
 #--- Subroutines ---#

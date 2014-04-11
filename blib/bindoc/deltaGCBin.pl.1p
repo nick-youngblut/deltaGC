@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "DELTAGCBIN 1"
-.TH DELTAGCBIN 1 "2014-04-10" "perl v5.14.2" "User Contributed Perl Documentation"
+.TH DELTAGCBIN 1 "2014-04-11" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -156,6 +156,11 @@ Default: binwidth.default
 Minimum & maximum fragment_buoyant_density
 .Sp
 Default: min.default\-max.default
+.IP "\-f[ork] <fork>" 4
+.IX Item "-f[ork] <fork>"
+Number of genomes to process in parallel (0 = no forking).
+.Sp
+Default: fork.default
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,
