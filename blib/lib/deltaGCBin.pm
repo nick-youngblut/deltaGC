@@ -152,6 +152,10 @@ sub calcMedianRank{
       $stat->add_data(${$tbl_r->{$genome}{$Uid}}[7]); # adding density values
     }
     $medians{$genome}{median} = $stat->median();
+
+    # sanity check
+    croak("ERROR: median undefined for genome: '$genome'\n")
+      unless defined $medians{$genome}{median};
   }
   # ranking by median
   my $rank=0;
