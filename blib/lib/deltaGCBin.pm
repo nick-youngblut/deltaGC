@@ -107,14 +107,14 @@ sub binByDensity{
 
 	# adding to bin
 	## amplicon
-	if( $amp_dens =~ /^[\d.]+$/ and
+	if( $amp_dens =~ /$RE{num}{real}/ and
 	    $amp_dens >= $bin->[0] and 
 	    $amp_dens < $bin->[1]){
 	  $bins{$genome}{$bin->[2]}{amp_count}++;
 	  $bins{$genome}{$bin->[2]}{row} = $tbl_r->{$genome}{$Uid};
 	}
 	## fragment
-	if( $frag_dens =~ /^[\d.]+$/ and  
+	if( $frag_dens =~ /$RE{num}{real}/ and  
 	    $frag_dens >= $bin->[0] and 
 	    $frag_dens < $bin->[1]){
 	  $bins{$genome}{$bin->[2]}{frag_count}++;

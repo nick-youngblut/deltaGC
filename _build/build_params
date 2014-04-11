@@ -113,6 +113,7 @@ do{ my $x = [
          'script_files' => [
                              './bin/deltaGCBin.pl',
                              './bin/rnammer_GC-frag.pl',
+                             './bin/grinder_descByFileName.pl',
                              './bin/deltaGC.pl',
                              './bin/grinder_readFilter.pl',
                              './bin/GC_dist.pl'
