@@ -138,6 +138,7 @@ sub get_frag_GC{
 ## calculate fragment GC
 ## record GC & length
   use GC_dist qw/parse_desc/;
+  use Text::ParseWords;
 
   my ($genome, $spec_ids_r,
       $genome_db, $read_db, 
@@ -149,6 +150,7 @@ sub get_frag_GC{
       $DFn, $DFd,
       $primer_buffer,
       $gap_frac) = @_;
+
 
   # sanity checks
   ## values provided
@@ -162,11 +164,19 @@ sub get_frag_GC{
 
   # processing each read
   my @ret;
+  my $genome_name;
   foreach my $Uid (@$spec_ids_r){
     my $seqo = $read_db->get_Seq_by_id($Uid);
     my $desc = parse_desc($seqo->desc, $amp_b);
     my ($ref, $amp_start, $amp_end, $strand) = @$desc;
     my $amp_len = abs($amp_end - $amp_start) + 1;
+
+    unless(defined $genome_name){
+      my @l = grep(/description=/, quotewords('\s+', 0, $read_db->header($Uid)) );
+      croak("ERROR: no 'description=' found for read '$Uid'\n")
+	unless @l;
+      map{ $genome_name = $1 if /description="*(.+)"*/ } $l[0];
+    }
 
     # fragment size
     my $frag_size;
@@ -305,7 +315,7 @@ sub get_frag_GC{
       ($amp_GC * 0.098 / 100) + 1.660 : 'NA';
 
     # writing output
-    push @ret, [$genome_db->header($genome),
+    push @ret, [$genome_name, #<-- from 'description='    #$genome_db->header($genome),
 	       $genome,
 	       $Uid,
 	       $amp_GC,
