@@ -118,6 +118,7 @@ use Data::Dumper;
 use Getopt::Euclid;
 use Parallel::ForkManager;
 use Term::ProgressBar;
+use Storable qw/dclone/;
 use deltaGCBin qw/
 load_deltaGC_table
 binByDensity
@@ -132,7 +133,7 @@ print STDERR "Loading deltaGC.pl output table\n";
 my ($tbl_r, $min, $max) = load_deltaGC_table($ARGV{'<filename>'});
 
 # calculating median density by genome & ranking
-print STDERR "Calculating ranks of genomes by median fragment buoynat dnesity values\n";
+print STDERR "Calculating ranks of genomes by median fragment buoynat density values\n";
 my $stats_r = calcMedianRank($tbl_r);
 
 # binwidth=0.001
@@ -175,7 +176,8 @@ foreach my $genome (keys %$tbl_r){
 
   # forking
   $pm->start and next;
-  my $bins_r = binByDensity($tbl_r->{$genome}, $genome, $binRanges_r);
+  #my %tmp = %{$tbl_r->{$genome}};
+  my $bins_r = binByDensity(dclone($tbl_r->{$genome}), $genome, $binRanges_r);
   $pm->finish(0, [$genome, $bins_r]);
 }
 $pm->wait_all_children;

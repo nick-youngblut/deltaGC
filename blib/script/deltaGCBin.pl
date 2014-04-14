@@ -117,6 +117,7 @@ This software is licensed under the terms of the GPLv3
 use Data::Dumper;
 use Getopt::Euclid;
 use Parallel::ForkManager;
+use Term::ProgressBar;
 use deltaGCBin qw/
 load_deltaGC_table
 binByDensity
@@ -127,9 +128,11 @@ die "ERROR: max in range is < min!\n"
   unless $ARGV{-range}{min} <= $ARGV{-range}{max};
 
 #--- MAIN ---#
+print STDERR "Loading deltaGC.pl output table\n";
 my ($tbl_r, $min, $max) = load_deltaGC_table($ARGV{'<filename>'});
 
 # calculating median density by genome & ranking
+print STDERR "Calculating ranks of genomes by median fragment buoynat dnesity values\n";
 my $stats_r = calcMedianRank($tbl_r);
 
 # binwidth=0.001
@@ -162,8 +165,15 @@ $pm->run_on_finish(
    }
 );
 
+print STDERR "Placing buoyant density values into bins\n";
+my $prog = Term::ProgressBar->new(scalar keys %$tbl_r);
+my $prog_cnt = 0;
+foreach my $genome (keys %$tbl_r){    
+  # progress
+  $prog->update($prog_cnt);
+  $prog_cnt++;
 
-foreach my $genome (keys %$tbl_r){  
+  # forking
   $pm->start and next;
   my $bins_r = binByDensity($tbl_r->{$genome}, $genome, $binRanges_r);
   $pm->finish(0, [$genome, $bins_r]);
