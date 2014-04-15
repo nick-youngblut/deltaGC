@@ -118,7 +118,7 @@ use Data::Dumper;
 use Getopt::Euclid;
 use Parallel::ForkManager;
 use Term::ProgressBar;
-use Storable qw/dclone/;
+use Clone qw/clone/;
 use deltaGCBin qw/
 load_deltaGC_table
 binByDensity
@@ -176,8 +176,7 @@ foreach my $genome (keys %$tbl_r){
 
   # forking
   $pm->start and next;
-  #my %tmp = %{$tbl_r->{$genome}};
-  my $bins_r = binByDensity(dclone($tbl_r->{$genome}), $genome, $binRanges_r);
+  my $bins_r = binByDensity( $tbl_r->{$genome}, $genome, $binRanges_r);
   $pm->finish(0, [$genome, $bins_r]);
 }
 $pm->wait_all_children;
