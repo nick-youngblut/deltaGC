@@ -123,44 +123,34 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "DELTAGCBIN 1"
-.TH DELTAGCBIN 1 "2014-04-15" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "RNAMMER_TANDEM_RRN 1"
+.TH RNAMMER_TANDEM_RRN 1 "2014-04-15" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-deltaGCBin.pl \-\- Binning buoyant densities calucated from deltaGC.pl
+rnammer_tandem_rrn.pl \-\- find adjacent rrn operons using gff files from rnammer
 .SH "VERSION"
 .IX Header "VERSION"
 This is version 0.0.1
 .SH "USAGE"
 .IX Header "USAGE"
 .Vb 1
-\&    deltaGCBin.pl [options]
+\&    rnammer_tandem_rrn.pl [options]
 .Ve
 .SH "REQUIRED ARGUMENTS"
 .IX Header "REQUIRED ARGUMENTS"
-.IP "<filename>" 4
-.IX Item "<filename>"
-tab-delimited file produced by deltaGC.pl. ('\-' if from \s-1STDIN\s0)
+.IP "<gff_file_list>" 4
+.IX Item "<gff_file_list>"
+List of gff files produced by rnammer ('\-' if \s-1STDIN\s0).
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-.IP "\-b[[in][width]] <binwidth>" 4
-.IX Item "-b[[in][width]] <binwidth>"
-fragment_buoyant_density binwidth.
+.IP "\-m[[ax][_distance]] <d>" 4
+.IX Item "-m[[ax][_distance]] <d>"
+Max distance between 16S rRNA and adjacent 23S rRNA genes (bp).
 .Sp
-Default: binwidth.default
-.IP "\-range <min>\-<max>" 4
-.IX Item "-range <min>-<max>"
-Minimum & maximum fragment_buoyant_density
-.Sp
-Default: min.default\-max.default
-.IP "\-f[ork] <fork>" 4
-.IX Item "-f[ork] <fork>"
-Number of genomes to process in parallel (0 = no forking).
-.Sp
-Default: fork.default
+Default: d.default
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,
@@ -178,14 +168,6 @@ then it is log_level.opt_default.
 Print the usual program information
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Bin data produced by deltaGC.pl in terms of
-read(amplicon)_buoyant_density & fragment_buoyant_density. 
-This makes it easier to produce a heatmap
-of buoyant densities with ggplot.
-.PP
-Also, the median fragment_buoyant_density
-is calculated for each genome and each genome
-is ranked by median fragment_buoyant_density.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SH "AUTHOR"

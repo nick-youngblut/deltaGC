@@ -123,79 +123,80 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "DELTAGCBIN 1"
-.TH DELTAGCBIN 1 "2014-04-15" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "rnammer_tandem_rrn 3"
+.TH rnammer_tandem_rrn 3 "2014-04-15" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-deltaGCBin.pl \-\- Binning buoyant densities calucated from deltaGC.pl
+rnammer_tandem_rrn \- scripts for running rnammer_tandem_rrn.pl
 .SH "VERSION"
 .IX Header "VERSION"
-This is version 0.0.1
-.SH "USAGE"
-.IX Header "USAGE"
-.Vb 1
-\&    deltaGCBin.pl [options]
-.Ve
-.SH "REQUIRED ARGUMENTS"
-.IX Header "REQUIRED ARGUMENTS"
-.IP "<filename>" 4
-.IX Item "<filename>"
-tab-delimited file produced by deltaGC.pl. ('\-' if from \s-1STDIN\s0)
-.SH "OPTIONS"
-.IX Header "OPTIONS"
-.IP "\-b[[in][width]] <binwidth>" 4
-.IX Item "-b[[in][width]] <binwidth>"
-fragment_buoyant_density binwidth.
-.Sp
-Default: binwidth.default
-.IP "\-range <min>\-<max>" 4
-.IX Item "-range <min>-<max>"
-Minimum & maximum fragment_buoyant_density
-.Sp
-Default: min.default\-max.default
-.IP "\-f[ork] <fork>" 4
-.IX Item "-f[ork] <fork>"
-Number of genomes to process in parallel (0 = no forking).
-.Sp
-Default: fork.default
-.IP "\-\-debug [<log_level>]" 4
-.IX Item "--debug [<log_level>]"
-Set the log level. Default is log_level.default but if you provide \-\-debug,
-then it is log_level.opt_default.
-.IP "\-\-version" 4
-.IX Item "--version"
-.PD 0
-.IP "\-\-usage" 4
-.IX Item "--usage"
-.IP "\-\-help" 4
-.IX Item "--help"
-.IP "\-\-man" 4
-.IX Item "--man"
-.PD
-Print the usual program information
-.SH "DESCRIPTION"
-.IX Header "DESCRIPTION"
-Bin data produced by deltaGC.pl in terms of
-read(amplicon)_buoyant_density & fragment_buoyant_density. 
-This makes it easier to produce a heatmap
-of buoyant densities with ggplot.
+Version 0.01
+.SH "SYNOPSIS"
+.IX Header "SYNOPSIS"
+.SH "EXPORT"
+.IX Header "EXPORT"
+.SH "SUBROUTINES/METHODS"
+.IX Header "SUBROUTINES/METHODS"
+.SS "load_gff_file_list"
+.IX Subsection "load_gff_file_list"
+Converting file list to array of files.
+Checking that files exist.
 .PP
-Also, the median fragment_buoyant_density
-is calculated for each genome and each genome
-is ranked by median fragment_buoyant_density.
-.SH "EXAMPLES"
-.IX Header "EXAMPLES"
+Parsing each gff and loading features into interval tree
+.SS "check_tandem"
+.IX Subsection "check_tandem"
+Checking to see if 16S rRNA gene has 2 adjacent 23S rRNA genes.
+Adjacency determined by '$dist'
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-Nick Youngblut (ndy2@cornell.edu)
+Nick Youngblut, \f(CW\*(C`<ndy2 at cornell.edu>\*(C'\fR
 .SH "BUGS"
 .IX Header "BUGS"
-There are undoubtedly serious bugs lurking somewhere in this code.
-Bug reports and other feedback are most welcome.
-.SH "COPYRIGHT"
-.IX Header "COPYRIGHT"
-Copyright 2010, 2011
-This software is licensed under the terms of the GPLv3
+Please report any bugs or feature requests to \f(CW\*(C`bug\-rnammer_tandem_rrn at rt.cpan.org\*(C'\fR, or through
+the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=rnammer_tandem_rrn>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+.SH "SUPPORT"
+.IX Header "SUPPORT"
+You can find documentation for this module with the perldoc command.
+.PP
+.Vb 1
+\&    perldoc rnammer_tandem_rrn
+.Ve
+.PP
+You can also look for information at:
+.IP "\(bu" 4
+\&\s-1RT:\s0 \s-1CPAN\s0's request tracker (report bugs here)
+.Sp
+<http://rt.cpan.org/NoAuth/Bugs.html?Dist=rnammer_tandem_rrn>
+.IP "\(bu" 4
+AnnoCPAN: Annotated \s-1CPAN\s0 documentation
+.Sp
+<http://annocpan.org/dist/rnammer_tandem_rrn>
+.IP "\(bu" 4
+\&\s-1CPAN\s0 Ratings
+.Sp
+<http://cpanratings.perl.org/d/rnammer_tandem_rrn>
+.IP "\(bu" 4
+Search \s-1CPAN\s0
+.Sp
+<http://search.cpan.org/dist/rnammer_tandem_rrn/>
+.SH "ACKNOWLEDGEMENTS"
+.IX Header "ACKNOWLEDGEMENTS"
+.SH "LICENSE AND COPYRIGHT"
+.IX Header "LICENSE AND COPYRIGHT"
+Copyright 2014 Nick Youngblut.
+.PP
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the \s-1GNU\s0 General Public License as published
+by the Free Software Foundation; or the Artistic License.
+.PP
+See http://dev.perl.org/licenses/ for more information.
+.SH "POD ERRORS"
+.IX Header "POD ERRORS"
+Hey! \fBThe above document had some coding errors, which are explained below:\fR
+.IP "Around line 58:" 4
+.IX Item "Around line 58:"
+Unknown directive: =head

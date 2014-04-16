@@ -176,7 +176,7 @@ foreach my $genome (keys %$tbl_r){
 
   # forking
   $pm->start and next;
-  my $bins_r = binByDensity( clone($tbl_r->{$genome}), $genome, $binRanges_r);
+  my $bins_r = binByDensity( $tbl_r->{$genome}, $genome, $binRanges_r);
   $pm->finish(0, [$genome, $bins_r]);
 }
 $pm->wait_all_children;

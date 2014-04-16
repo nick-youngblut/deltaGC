@@ -112,6 +112,7 @@ do{ my $x = [
          'extra_compiler_flags' => [],
          'script_files' => [
                              './bin/deltaGCBin.pl',
+                             './bin/rnammer_tandem_rrn.pl',
                              './bin/rnammer_GC-frag.pl',
                              './bin/grinder_descByFileName.pl',
                              './bin/deltaGC.pl',
