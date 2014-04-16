@@ -123,73 +123,42 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "GC_DIST 1"
-.TH GC_DIST 1 "2014-04-16" "perl v5.14.2" "User Contributed Perl Documentation"
+.IX Title "CALCGC 1"
+.TH CALCGC 1 "2014-04-16" "perl v5.14.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-GC_dist.pl \-\- sliding window of GC around each grinder\-produced read
+GC_dist.pl \-\- fast calculation of GC content for all sequence in a fasta file
 .SH "VERSION"
 .IX Header "VERSION"
 This is version 0.0.1
 .SH "USAGE"
 .IX Header "USAGE"
 .Vb 1
-\&    GC_dist.pl [options] > GC_byWindow.txt
+\&    GC_dist.pl [options]
 .Ve
 .SH "REQUIRED ARGUMENTS"
 .IX Header "REQUIRED ARGUMENTS"
-.IP "\-r[eads] <read_file>" 4
-.IX Item "-r[eads] <read_file>"
-Reads output by grinder
-.IP "\-g[enomes] <genome_file>" 4
-.IX Item "-g[enomes] <genome_file>"
-Fasta file of genomes used as '\-reference_file' in grinder
+.IP "<fasta_file>" 4
+.IX Item "<fasta_file>"
+Fasta file ('\-' if provided via \s-1STDIN\s0).
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-.IP "\-a[mplicon]" 4
-.IX Item "-a[mplicon]"
-Amplicon reads instead of shotgun metagenome reads? [\s-1FALSE\s0]
-.IP "\-s[ize] <frag_size>" 4
-.IX Item "-s[ize] <frag_size>"
-Fragment size (bp) around the read (total length assessed).
+.IP "\-N[_remove]" 4
+.IX Item "-N[_remove]"
+Remove 'N' characters from G+C calculation. [\s-1TRUE\s0]
+.IP "\-w[orkers] <w>" 4
+.IX Item "-w[orkers] <w>"
+Number of workers used by \s-1MCE\s0.
 .Sp
-Default: frag_size.default
-.IP "\-w[indow] <window_size>" 4
-.IX Item "-w[indow] <window_size>"
-Size (bp) of sliding window around read.
+Default: 'auto'
+.IP "\-c[hunk] <c>" 4
+.IX Item "-c[hunk] <c>"
+Chunk size used by \s-1MCE\s0.
 .Sp
-Default: window_size.default
-.IP "\-j[ump] <jump_size>" 4
-.IX Item "-j[ump] <jump_size>"
-Size (bp) for sliding window jump around read.
-.Sp
-Default: jump_size.default
-.IP "\-gap[_fraction] <gap_frac>" 4
-.IX Item "-gap[_fraction] <gap_frac>"
-Fraction of \s-1DNA\s0 segment that can be composed of gaps ('\-').
-GC_content = '\s-1NA\s0' if cutoff not met.
-.Sp
-Default: gap_frac.default
-.IP "\-c_g[enomes]" 4
-.IX Item "-c_g[enomes]"
-Write out new version of the genome fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-c_r[eads]" 4
-.IX Item "-c_r[eads]"
-Write out new version of the read fasta file where all sequence
-lines except the last are the same length for each entry? [\s-1FALSE\s0]
-.IP "\-t[hreads] <threads>" 4
-.IX Item "-t[hreads] <threads>"
-Number of threads to use for \s-1GC\s0 calculations.
-.Sp
-Default: threads.default
-.IP "\-i[ndex]" 4
-.IX Item "-i[ndex]"
-Force the genome & read database files (*.index) to be rebuilt 
-(not needed if database exists)? [\s-1TRUE\s0]
+Default: 'auto'
 .IP "\-\-debug [<log_level>]" 4
 .IX Item "--debug [<log_level>]"
 Set the log level. Default is log_level.default but if you provide \-\-debug,
@@ -209,29 +178,19 @@ then it is log_level.opt_default.
 Print the usual program information
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Determine how \s-1GC\s0 is distributed around
-each read produced by grinder.
+Determine G+C content stats for a genome fasta or
+collection of other sequences.
 .PP
-This is an exploratory program to 
-help understand values produced by deltaGC.
-.PP
-Postion is given by the midpoint of the window.
-Edge cases are skipped.
-.PP
-The output table can be easily plotted in R
-using ggplot.
+\&\s-1MCE\s0 is used to quickly determine G+C content by
+using multiple processors (workers).
 .PP
 Ambiguous \s-1IUPAC\s0 nucleotide codes will be included
 in \s-1GC\s0 calculations based the the fraction of 'G' & 'C'
-in the ambiguous character. See 'Warnings' about 'N'characters.
+in the ambiguous character. See 'Warnings' about 'N' characters.
 .SS "Warnings"
 .IX Subsection "Warnings"
 If 'N' characters signify gaps, remove them from the
-genome/read fasta files!
-.PP
-Delete the genome and read \s-1DB\s0 file (*index files)
-if the script is killed before the \s-1DB\s0 construction
-is completed, otherwise a partial database will be used.
+genome/read fasta files (use '\-N' flag)!
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SH "AUTHOR"
@@ -245,3 +204,9 @@ Bug reports and other feedback are most welcome.
 .IX Header "COPYRIGHT"
 Copyright 2010, 2011
 This software is licensed under the terms of the GPLv3
+.SH "POD ERRORS"
+.IX Header "POD ERRORS"
+Hey! \fBThe above document had some coding errors, which are explained below:\fR
+.IP "Around line 31:" 4
+.IX Item "Around line 31:"
+\&'=item' outside of any '=over'

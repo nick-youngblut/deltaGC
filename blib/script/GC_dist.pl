@@ -196,8 +196,11 @@ write_output/;
 
 
 #--- I/O error ---#
-if(defined $ARGV{'-index'}){  $ARGV{'-index'} = 0; }
-else{  $ARGV{'-index'} = 1; }
+if(defined $ARGV{'-index'}){  $ARGV{'-index'} = 0; } # don't force rebuilding of index
+else{  $ARGV{'-index'} = 1; } # rebuild index
+
+print STDERR "'-amplicon' not specified. Assuming shotgun reads, which affects how read position info is parsed\n"
+  unless $ARGV{'-amplicon'};
 
 #--- MAIN ---#
 # memory
@@ -213,7 +216,7 @@ if( $ARGV{-c_genomes} ){
 
 ## make genome database
 unless($ARGV{'--quiet'}){
-  $ARGV{'-index'} ? print STDERR "Making genome database...\n" :
+  $ARGV{'-index'} == 1 ? print STDERR "Making genome database...\n" :
     print STDERR "Loading genome database...\n";
 }
 

@@ -117,6 +117,7 @@ do{ my $x = [
                              './bin/grinder_descByFileName.pl',
                              './bin/deltaGC.pl',
                              './bin/grinder_readFilter.pl',
+                             './bin/calcGC.pl',
                              './bin/GC_dist.pl'
                            ],
          'build_script' => 'Build',

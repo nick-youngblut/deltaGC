@@ -133,7 +133,7 @@ print STDERR "Loading deltaGC.pl output table\n";
 my ($tbl_r, $min, $max) = load_deltaGC_table($ARGV{'<filename>'});
 
 # calculating median density by genome & ranking
-print STDERR "Calculating ranks of genomes by median fragment buoynat density values\n";
+print STDERR "Calculating ranks of genomes by median fragment buoyant density values\n";
 my $stats_r = calcMedianRank($tbl_r);
 
 # binwidth=0.001
