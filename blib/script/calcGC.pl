@@ -169,4 +169,5 @@ foreach (@vals){
   $len_sum += $_->[1];
 }
 
-print $gc_sum / $len_sum;
+print join("\t", $ARGV{'<fasta_file>'}, 
+	   $gc_sum / $len_sum), "\n";
