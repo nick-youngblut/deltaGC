@@ -2,6 +2,25 @@
 
 __Main application: DNA-SIP (stable isotope probing)__
 
+
+## IPYTHON NOTEBOOKS 
+
+Describe the analyzses conducted in the paper:
+
+Youngblut,ND and Buckley,DH.
+Intra-genomic variation in G+C content and its implications for DNA Stable Isotope Probing (DNA-SIP).
+_In prep_
+
+The perl scripts in this repo were used in the analyzses.
+
+The ipython notebooks are in the 'ipynb' directory.
+
+A list of the accession numbers for all bacterial and archaeal genomes
+used in the analyzes can be found in the 'accessions' directory.
+
+
+## GENERAL DESCRIPTION OF THE SCRIPTS 
+
 These scripts are design to assess how GC content of DNA fragments governs the buoyant density distribution
 of these fragments in a CsCl gradient. 
 
@@ -10,13 +29,15 @@ or shotgun reads for (meta)genomics). Therefore, amplicons or shotgun reads are 
 the template fragment that each read originate from is simulated and the GC content is calculated, which
 can be used to determine the buoyant density of the molecule in a CsCl gradient (assuming equilibruim).
 
-##PREREQUISTS
+
+## PREREQUISTS
 
 * [GRINDER](http://sourceforge.net/projects/biogrinder/ "GRINDER")
 
 ### perl modules:
 
-All of these (except bioperl) should be easy to install with cpan or cpanm
+All of these (except possibly bioperl) should be easy to install with cpan or cpanm
+(at least on *nix systems).
 
 * Getopt::Euclid
 * Parallel::ForkManager
@@ -46,8 +67,8 @@ To install this module, run the following commands:
 
 ##SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for each script by
-typing: 
+After installing, you can find documentation for each script (eg., SCRIPT.pl)
+by typing: 
 
 	SCRIPT.pl --man
 	   OR
