@@ -3,23 +3,25 @@
 __Main application: DNA-SIP (stable isotope probing)__
 
 
-## IPYTHON NOTEBOOKS 
+## DESCRIPTION
 
-Describe the analyzses conducted in the paper:
+The notebooks describe the analyzses conducted in the paper:
 
 Youngblut,ND and Buckley,DH.
 Intra-genomic variation in G+C content and its implications for DNA Stable Isotope Probing (DNA-SIP).
 _In prep_
 
-The perl scripts in this repo were used in the analyzses.
+These notebooks are in the ./ipynb directory. html versions of each notebook
+can found in the ./ipynb/html directory
 
-The ipython notebooks are in the 'ipynb' directory.
+The perl scripts & packages in this repo were used in the analyzses.
+They are in the ./bin and ./lib directories (see PERL SCRIPTS below).
 
 A list of the accession numbers for all bacterial and archaeal genomes
 used in the analyzes can be found in the 'accessions' directory.
 
 
-## GENERAL DESCRIPTION OF THE SCRIPTS 
+## PERL SCRIPTS 
 
 These scripts are design to assess how GC content of DNA fragments governs the buoyant density distribution
 of these fragments in a CsCl gradient. 
@@ -30,11 +32,11 @@ the template fragment that each read originate from is simulated and the GC cont
 can be used to determine the buoyant density of the molecule in a CsCl gradient (assuming equilibruim).
 
 
-## PREREQUISTS
+### PREREQUISTS
 
 * [GRINDER](http://sourceforge.net/projects/biogrinder/ "GRINDER")
 
-### perl modules:
+#### perl modules:
 
 All of these (except possibly bioperl) should be easy to install with cpan or cpanm
 (at least on *nix systems).
@@ -56,7 +58,7 @@ __BioPerl modules__
 * Bio::DB::Fasta
 
 
-##INSTALLATION
+### INSTALLATION
 
 To install this module, run the following commands:
 
@@ -65,7 +67,7 @@ To install this module, run the following commands:
 	./Build test
 	./Build install
 
-##SUPPORT AND DOCUMENTATION
+### SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for each script (eg., SCRIPT.pl)
 by typing: 
@@ -75,7 +77,7 @@ by typing:
 	perldoc SCRIPT.pl
 
 
-##LICENSE AND COPYRIGHT
+### LICENSE AND COPYRIGHT
 
 Copyright (C) 2014 Nick Youngblut
 
