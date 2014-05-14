@@ -1,0 +1,154 @@
+2014-05-12 07:07:44.993 [NotebookApp] Using existing profile dir: u'/home/nick/.ipython/profile_default'
+2014-05-12 07:07:44.997 [NotebookApp] Using MathJax from CDN: http://cdn.mathjax.org/mathjax/latest/MathJax.js
+2014-05-12 07:07:45.015 [NotebookApp] Serving notebooks from local directory: /home/nick/dev/deltaGC/ipynb
+2014-05-12 07:07:45.015 [NotebookApp] 0 active kernels 
+2014-05-12 07:07:45.015 [NotebookApp] The IPython Notebook is running at: http://127.0.0.1:7979/
+2014-05-12 07:07:45.016 [NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+2014-05-12 07:08:13.058 [tornado.access] 302 GET / (127.0.0.1) 2.56ms
+2014-05-12 07:08:18.815 [NotebookApp] Kernel started: 792245b6-636e-4d89-963d-3bd483dd7e5d
+2014-05-12 07:10:18.807 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:12:18.804 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:16:18.794 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:18:18.790 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:20:18.789 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:22:18.787 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+-->interrupted.
+2014-05-12 07:24:20.300 [NotebookApp] Kernel interrupted: 792245b6-636e-4d89-963d-3bd483dd7e5d
+Keyboard interrupt.
+2014-05-12 07:26:18.785 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:28:18.777 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:30:18.770 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:32:18.774 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:34:18.763 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:36:18.761 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:37:54.764 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:38:18.757 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:39:47.942 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:46:18.745 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:48:18.741 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:50:18.737 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 07:52:18.735 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:04:18.713 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:06:18.711 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:38:18.653 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:40:18.653 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:42:18.646 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:44:18.643 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:46:18.639 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:50:18.631 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 08:52:18.630 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:10:06.972 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:10:18.592 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:12:18.594 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:13:08.530 [tornado.access] 302 GET / (127.0.0.1) 1.17ms
+2014-05-12 09:14:18.590 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:16:18.582 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:18:18.579 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:22:18.575 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:24:18.571 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:30:18.556 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:32:18.551 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 09:34:18.547 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 10:18:18.475 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:00:30.251 [NotebookApp] Kernel started: 85120d87-3ae6-4b5d-b4c9-99b11af20619
+2014-05-12 12:04:30.289 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 12:06:30.276 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 12:08:30.276 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 12:11:35.417 [NotebookApp] Creating new notebook in /
+2014-05-12 12:11:36.178 [NotebookApp] Kernel started: 056a1a82-89af-446a-99a6-ca38219dcd7c
+2014-05-12 12:13:36.168 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:15:36.168 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:17:36.163 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:19:36.158 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:21:36.153 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:22:44.426 [NotebookApp] Saving notebook at /test.ipynb
+2014-05-12 12:23:36.154 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 12:23:45.656 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 12:25:36.152 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 12:26:34.963 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 12:48:57.520 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:50:57.510 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:52:57.508 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:54:57.505 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:56:57.501 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 12:58:57.490 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:00:57.485 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:02:57.482 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:26:58.417 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:28:58.415 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:30:58.405 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:32:58.410 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 13:34:58.409 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-05-12 15:01:36.180 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:03:36.188 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:05:36.179 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:07:36.172 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:09:28.775 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:11:36.160 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:13:36.154 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:15:36.158 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 15:18:30.177 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 15:19:05.175 [NotebookApp] Creating new notebook in /
+2014-05-12 15:19:05.961 [NotebookApp] Kernel started: 4197aefb-830a-4325-97a2-ee30712db460
+2014-05-12 15:20:30.165 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 15:21:05.950 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 15:23:05.945 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 15:25:05.941 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 15:26:05.857 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:38:23.899 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:40:18.427 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:42:18.411 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:44:18.421 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:46:18.438 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:48:18.445 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:50:18.429 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:52:18.457 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 17:54:19.206 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 17:58:19.313 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 18:00:19.517 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 18:02:19.710 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 18:04:19.310 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 18:06:20.352 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-12 18:06:20.437 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 18:08:19.520 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 18:24:19.456 [NotebookApp] Saving notebook at /Archaea_fragment_GC_diff.ipynb
+2014-05-12 18:35:25.136 [NotebookApp] Creating new notebook in /
+2014-05-12 18:35:26.173 [NotebookApp] Kernel started: 382ab195-e5aa-40dc-b517-e824b8a55502
+2014-05-12 18:37:26.200 [NotebookApp] Saving notebook at /fragment_distribution.ipynb
+2014-05-12 18:38:12.316 [NotebookApp] Kernel started: c0ccf6e5-0866-4f28-bb87-d2b9939743ed
+2014-05-12 18:40:12.366 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:42:13.322 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:44:13.484 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:46:13.419 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:48:13.294 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:50:13.452 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:52:13.272 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:54:13.529 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:56:13.398 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 18:58:13.302 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 19:00:13.255 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 19:02:13.325 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-12 19:35:11.000 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:37:10.211 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:37:32.649 [NotebookApp] Kernel shutdown: 792245b6-636e-4d89-963d-3bd483dd7e5d
+2014-05-12 19:39:12.456 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:41:15.445 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:43:11.746 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:45:12.371 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:47:12.117 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:49:12.363 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:51:11.572 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:53:11.963 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 19:59:10.871 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-12 20:01:11.073 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-13 07:36:24.968 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-13 07:36:47.501 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-05-14 10:11:32.472 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-14 10:11:46.370 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-14 10:13:46.367 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-14 10:14:13.088 [NotebookApp] Saving notebook at /debug.ipynb
+2014-05-14 10:15:01.956 [NotebookApp] Kernel shutdown: 4197aefb-830a-4325-97a2-ee30712db460
+2014-05-14 10:15:39.347 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-14 10:16:39.198 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-05-14 10:16:48.390 [NotebookApp] Kernel shutdown: c0ccf6e5-0866-4f28-bb87-d2b9939743ed
+2014-05-14 10:16:50.443 [NotebookApp] Kernel shutdown: 056a1a82-89af-446a-99a6-ca38219dcd7c

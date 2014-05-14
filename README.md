@@ -5,9 +5,7 @@ __Main application: DNA-SIP (stable isotope probing)__
 
 ## DESCRIPTION
 
-The notebooks describe the analyzses conducted in the paper:
-
-__Youngblut,N.D. and Buckley,D.H.
+The notebooks describe the analyzses conducted in the paper: __Youngblut,N.D. and Buckley,D.H.
 Intra-genomic variation in G+C content and its implications for DNA Stable Isotope Probing (DNA-SIP).
 *In prep*__
 
