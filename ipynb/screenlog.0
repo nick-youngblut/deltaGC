@@ -1,0 +1,118 @@
+2014-07-10 14:30:31.267 [NotebookApp] Using existing profile dir: u'/home/nick/.ipython/profile_default'
+2014-07-10 14:30:31.271 [NotebookApp] Using MathJax from CDN: http://cdn.mathjax.org/mathjax/latest/MathJax.js
+2014-07-10 14:30:31.282 [NotebookApp] Serving notebooks from local directory: /home/nick/dev/deltaGC/ipynb
+2014-07-10 14:30:31.282 [NotebookApp] 0 active kernels 
+2014-07-10 14:30:31.283 [NotebookApp] The IPython Notebook is running at: http://localhost:7704/
+2014-07-10 14:30:31.283 [NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+2014-07-10 14:43:14.341 [NotebookApp] Kernel started: 58a140fd-2146-47cf-9f7d-66366738e716
+2014-07-10 14:45:14.329 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:47:14.326 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:49:14.344 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:51:14.342 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:53:14.328 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:55:14.336 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:57:14.312 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 14:59:14.311 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:01:14.308 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:02:41.522 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:03:14.317 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:05:14.310 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:07:14.301 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:09:14.288 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:10:46.949 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-10 15:11:09.081 [NotebookApp] Kernel started: aaef38a2-cd62-42e0-9c74-72636ffb1736
+2014-07-10 15:13:09.074 [NotebookApp] Saving notebook at /BD_dist_examples.ipynb
+2014-07-10 15:13:10.822 [NotebookApp] Saving notebook at /BD_dist_examples.ipynb
+2014-07-10 15:15:09.073 [NotebookApp] Saving notebook at /BD_dist_examples.ipynb
+2014-07-10 15:16:52.857 [NotebookApp] Saving notebook at /BD_dist_examples.ipynb
+2014-07-10 15:18:42.627 [NotebookApp] Saving notebook at /BD_dist_examples.ipynb
+2014-07-10 15:19:16.940 [NotebookApp] Kernel started: 86c729df-c4c1-4d08-b8a3-67c121d82878
+2014-07-10 15:21:16.961 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:23:16.956 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:25:16.960 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:27:16.964 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:29:16.965 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:33:16.954 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:35:16.955 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:37:16.930 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:39:16.943 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:45:16.941 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:47:16.927 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:49:04.535 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:51:16.908 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:53:16.954 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:54:33.369 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:57:16.920 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-10 15:57:24.034 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:00:57.008 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:01:28.547 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:05:28.540 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:05:31.869 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:07:28.544 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:07:56.215 [tornado.access] WARNING | 404 GET /home/nick/notebook/deltaGC_notes/data/amp-mg/figures/dense-htmp_12.5kb/dense-htmp_12.5kb.tiff (127.0.0.1) 30.59ms referer=http://127.0.0.1:7704/notebooks/fragment_simulations.ipynb
+2014-07-14 07:09:28.689 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:11:28.687 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:15:28.676 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:21:28.657 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:23:28.653 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:45:28.592 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:47:28.589 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:49:28.613 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:51:28.604 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:53:28.584 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:55:28.581 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:57:28.597 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 07:59:28.597 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:01:28.592 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:03:28.557 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:04:22.366 [NotebookApp] Kernel started: f6fa8105-7cd6-4d84-ace2-d8e91d4962df
+2014-07-14 08:05:29.528 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:06:22.498 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-07-14 08:07:29.528 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:08:22.493 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-07-14 08:09:29.532 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:10:22.495 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-07-14 08:11:29.530 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:12:22.491 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-07-14 08:13:29.508 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:14:22.484 [NotebookApp] Saving notebook at /fragment_length_dist.ipynb
+2014-07-14 08:15:29.502 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:17:29.519 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:19:29.495 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:21:29.530 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:23:29.509 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:25:17.878 [tornado.access] WARNING | 404 GET /home/nick/notebook/deltaGC_notes/data/amp-mg/figures/dense-htmp_6kb/dense-htmp_6kb.png (127.0.0.1) 2.26ms referer=http://127.0.0.1:7704/notebooks/fragment_simulations.ipynb
+2014-07-14 08:25:29.505 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:27:29.525 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:28:10.940 [NotebookApp] KernelRestarter: restarting kernel (1/5)
+WARNING:root:kernel 86c729df-c4c1-4d08-b8a3-67c121d82878 restarted
+2014-07-14 08:29:29.487 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:31:29.494 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:33:29.493 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:33:43.295 [NotebookApp] Kernel shutdown: f6fa8105-7cd6-4d84-ace2-d8e91d4962df
+2014-07-14 08:33:46.650 [NotebookApp] Kernel started: ea034035-8f34-4aa7-b624-dba0a3e0d4cd
+2014-07-14 08:35:30.493 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:35:46.659 [NotebookApp] Saving notebook at /CsCl_time_to_Eq.ipynb
+2014-07-14 08:37:46.656 [NotebookApp] Saving notebook at /CsCl_time_to_Eq.ipynb
+2014-07-14 08:39:31.374 [NotebookApp] Saving notebook at /CsCl_time_to_Eq.ipynb
+2014-07-14 08:41:30.461 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:43:27.434 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-14 08:43:30.458 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 08:45:27.425 [NotebookApp] Saving notebook at /GC_sliding_window.ipynb
+2014-07-14 08:47:30.457 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:17:30.409 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:19:30.397 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:21:30.375 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:23:30.415 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:25:30.401 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:27:30.417 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:29:30.421 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:31:30.410 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:33:30.420 [NotebookApp] Saving notebook at /fragment_simulations.ipynb
+2014-07-14 09:37:31.158 [NotebookApp] Kernel shutdown: 58a140fd-2146-47cf-9f7d-66366738e716
+2014-07-14 09:37:32.785 [NotebookApp] Kernel shutdown: ea034035-8f34-4aa7-b624-dba0a3e0d4cd
+2014-07-14 09:37:35.141 [NotebookApp] Kernel shutdown: aaef38a2-cd62-42e0-9c74-72636ffb1736
+2014-07-14 09:37:47.186 [NotebookApp] Kernel started: 5fbd432e-41be-4c06-a8f6-6a05bcc5c755
+2014-07-14 09:39:47.179 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-07-14 09:41:47.177 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+2014-07-14 09:43:47.175 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
