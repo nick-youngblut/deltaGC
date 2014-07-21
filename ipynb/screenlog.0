@@ -116,3 +116,18 @@ WARNING:root:kernel 86c729df-c4c1-4d08-b8a3-67c121d82878 restarted
 2014-07-14 09:39:47.179 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
 2014-07-14 09:41:47.177 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
 2014-07-14 09:43:47.175 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
+^C2014-07-16 06:20:15.654 [NotebookApp] interrupted
+Serving notebooks from local directory: /home/nick/dev/deltaGC/ipynb
+2 active kernels 
+The IPython Notebook is running at: http://localhost:7704/
+Shutdown this notebook server (y/[n])? n
+resuming operation...
+2014-07-16 06:21:02.707 [NotebookApp] Kernel started: 9fc9e928-bd44-4fe6-bec4-08a40765bfcc
+2014-07-16 06:22:28.505 [NotebookApp] Saving notebook at /CsCl_time_to_Eq.ipynb
+2014-07-16 06:25:44.006 [NotebookApp] Saving notebook at /CsCl_time_to_Eq.ipynb
+2014-07-16 12:18:18.562 [NotebookApp] Kernel shutdown: 9fc9e928-bd44-4fe6-bec4-08a40765bfcc
+2014-07-16 12:30:42.577 [NotebookApp] Kernel shutdown: 86c729df-c4c1-4d08-b8a3-67c121d82878
+2014-07-16 12:30:44.469 [NotebookApp] Kernel shutdown: 5fbd432e-41be-4c06-a8f6-6a05bcc5c755
+2014-07-19 08:29:15.217 [tornado.access] 302 GET / (127.0.0.1) 1.19ms
+2014-07-19 08:29:27.251 [NotebookApp] Kernel started: bebe1dfd-ad7b-47a5-878e-082621c82a33
+2014-07-19 08:31:27.458 [NotebookApp] Saving notebook at /BD_range_boxplots.ipynb
